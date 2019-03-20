@@ -1,0 +1,32 @@
+Programacion del lado del servidor y DB
+
+-php
+-mysql
+-vscode o sublimetext
+
+
+(labo) Programacion del lado del cliente
+
+- css
+-html
+-js
+
+Servidor
+
+-usamos Xampp con Apache
+-htdocs, carpeta:
+	C:\xampp\htdocs
+1-prender servidor
+2-estar en htdocs
+3-archivo .php
+
+http://localhost:8080/clase1/
+de forma predeterminada se busca index.html y sino index.php
+
+PHP
+-variables comienzan con $
+
+Postman
+- crear variables globales 
+- crear carpetas
+- crear usuario
