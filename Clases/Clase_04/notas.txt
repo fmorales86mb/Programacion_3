@@ -1,0 +1,10 @@
+Primer parcial 7 de mayo.
+clase anterior de práctica.
+
+mysql
+administrador de db mysqladmin. es web
+nuevo - utf spanish 2 ci (crear db)
+
+TP
+Se entrega un script con la db + datos
+y otro con las consultas.

@@ -1,0 +1,39 @@
+// Insertar
+INSERT INTO `localidad`(`localidad`) VALUES ('Avellaneda'), ('Quilmes'), ('Lanús'), ('Lomas de Zamora');
+
+INSERT INTO `alumno`(`nombre`, `legajo`, `localidad`) VALUES 
+('Federico', 123, 6), 
+('María', 412, 5),
+('Juan', 253, 7),
+('Pedro', 734, 7),
+('Marcelo', 12, 6),
+('Guillermo', 346, 8);
+
+// Modificar
+UPDATE `alumno` 
+SET alumno.nombre='Pablo', alumno.legajo = 666, `localidad`= 6
+WHERE 
+	alumno.id = 3;
+
+// Eliminar
+DELETE FROM `localidad` WHERE localidad.id = 1;
+
+// Alias
+SELECT localidad.localidad as Ciudad FROM localidad
+
+// FK
+Si no tenemos el FK podemos borrar una tabla y la que esté relacionada va a tener id que no existe.
+El fk le da consistencia a la BD.
+
+// Seleccionar
+SELECT alumno.nombre, alumno.legajo, localidad.localidad
+FROM alumno, localidad
+WHERE
+	alumno.localidad = localidad.id;
+
+SELECT a.legajo as LegajoAlumno, a.nombre, m.descripcion, l.localidad
+FROM alumno as a, materia as m, localidad as l, materia_alumno as ma
+WHERE	
+	a.localidad = l.id AND
+    a.id = ma.id_alumno AND
+    m.id = ma.id_materia;
