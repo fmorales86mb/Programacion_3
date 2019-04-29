@@ -1,25 +1,32 @@
 <?php
     class Archivos{
-        // Retorna una matriz del archivo, donde cada línea del archivo es una fila de la matriz
-        public static function ExtraerArrayArchCsv($urlFile)
+
+        // Retorna una php array con los datos del archivo. 
+        public static function ExtraerMatizArchCsv($urlFile)
         {
             $file = fopen($urlFile, "r");
-            $lista = NULL;
+            $lista = array();
 
             // Cargo el array
             if($file != NULL && $file != false)
             {        
                 for($i = 0; !feof($file); $i++)
                 {         
-                    $linea = explode(";", fgets($file));        
-                    if(count($linea) > 1)
-                    {
-                        $lista[$i] = $linea;                            
-                    }                    
+                    $objJson;
+                    $arrayLinea = explode(",", fgets($file)); 
+                    for($j = 0; $j < count($arrayLinea); $j++)
+                    {                        
+                        $KeyValue = explode(":", $arrayLinea[$j]); 
+                        if(count($KeyValue) > 1)
+                        {
+                            $objJson[$KeyValue[0]] = $KeyValue[1];
+                            $lista[$i] = $objJson;
+                        }                                               
+                    }                           
                 }            
                 fclose($file);
             }    
-
+            //var_dump($lista);
             return $lista;
         }
 
@@ -27,7 +34,7 @@
         public static function ExtraerArrayArchTxt($urlFile)
         {
             $file = fopen($urlFile, "r");
-            $lista;
+            $lista = array();
             
             // Cargo el array
             if($file != NULL && $file != false)
@@ -106,5 +113,5 @@
         }
 
     }
-
+    
 ?>

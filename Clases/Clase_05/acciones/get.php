@@ -4,20 +4,40 @@
 
     class Get{
 
-        public static function GetProveedorByNombre($nombre){
-            //$strFilas = Archivos::ExtraerArrayArchTxt(Proveedor::$fileUrl);
-            //var_dump($strFilas);
-            $listaProveedores;
-            var_dump($nombre);
-            // for($i =0; i<count($strFilas); $i++){
-            //     $proveedor = new Proveedor($strFilas[$i]);
+        // Devuelve una lista de proveedores con determinado nombre.
+        public static function GetProveedorByNombre($nombre){            
+            $objArray = Archivos::ExtraerMatizArchCsv(Proveedor::$fileUrlTxt);   
+            $listaProveedores = array();           
+            $strRespuesta = "Error";                  
 
-            //     if($proveedor->nombre == $nombre){
-            //         $listaProveedores[] = $proveedor;
-            //     }
-            // }
-                return "bla";
-            //return json_encode($listaProveedores);
+            for($i =0; $i<count($objArray); $i++){                          
+                $proveedor = new Proveedor($objArray[$i], $objArray[$i]["urlImagen"]);  
+                if($proveedor->nombre == $nombre){
+                    $listaProveedores[] = $proveedor;
+                }
+            }
+  
+            if(count($listaProveedores)<1){
+                $strRespuesta = "No existe proveedor $nombre.";
+            }
+            else{
+                $strRespuesta = json_encode($listaProveedores);
+            }
+
+            return $strRespuesta;
+        }
+
+        // Devuelve la lista de proveedores. 
+        public static function GetProveedores(){
+            $objArray = Archivos::ExtraerMatizArchCsv(Proveedor::$fileUrlTxt);            
+            $listaProveedores;            
+            
+            for($i =0; $i<count($objArray); $i++){                          
+                $proveedor = new Proveedor($objArray[$i], $objArray[$i]["urlImagen"]);              
+                $listaProveedores[] = $proveedor;         
+            }
+  
+            return json_encode($listaProveedores);
         }
 
     }

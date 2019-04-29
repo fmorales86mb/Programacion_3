@@ -1,1 +1,5 @@
-{"id":"1","nombre":"fede","email":"fede@bla.com"}
+id:6,nombre:Bach,email:bach@gmail,urlImagen:./data/imagenes/6-Bachpng,
+id:6,nombre:Bach,email:bach@gmail,urlImagen:./data/imagenes/6-Bach.png,
+id:7,nombre:moncho,email:moncho@gmail,urlImagen:./data/imagenes/7-moncho.png,
+id:7,nombre:moncho,email:moncho@gmail,urlImagen:./data/imagenes/7-moncho.png,
+id:7,nombre:moncho,email:moncho@gmail,urlImagen:./data/imagenes/7-moncho.png,

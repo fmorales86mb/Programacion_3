@@ -1,5 +1,5 @@
 <?php
-    include_once "./entidades/proveedor.php";
+    //include_once "./entidades/proveedor.php";
     include_once "./acciones/post.php";
     include_once "./acciones/get.php";
 
@@ -7,12 +7,21 @@
 
     switch($solicitud){
         case "GET":            
-            var_dump($_GET["nombre"]);
-            echo Get::GetProveedorByNombre($_GET["nombre"]);
+            // Trae item por nombre.
+            if(count($_GET) != 0){                
+                echo Get::GetProveedorByNombre($_GET["nombre"]);                
+            }
+            // Trae lista de items.
+            else{
+                echo Get::GetProveedores();
+            }            
             break;
-       case "POST":  
-            var_dump($_POST);                                          
-            Post::CargarProveedor($_POST);
+
+       case "POST":
+            // Agrega item.
+            //var_dump($_POST);  
+            //var_dump($_FILES);                                        
+            Post::CargarProveedor($_POST, $_FILES);
             break;
     }
 ?>
