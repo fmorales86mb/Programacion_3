@@ -80,12 +80,15 @@
         public static function EscribirLineaArch($fileUrl, $line)
         {
             $file = fopen($fileUrl, "a");
-
+            $retorno = "No se pudo realizar la operación";
             if($file != NULL && $file != false)
             {                        
                 fwrite($file, "$line\n");            
                 fclose($file);
+                $retorno = "$line\n";
             }
+
+            return $retorno;
         }
 
         //

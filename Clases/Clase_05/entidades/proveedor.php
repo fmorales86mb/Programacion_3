@@ -1,6 +1,4 @@
-<?php
-    //include_once "./acciones/archivos.php";
-
+<?php   
     class Proveedor{
         
         public $id;
@@ -10,13 +8,14 @@
                 
         private $fileUrlImage = "./data/imagenes/";
         
-        public static $fileUrlTxt = "./data/proveedores.txt";
+        
 
-        function __construct($strArray, $urlImagen = "-"){
-            $this->id = $strArray["id"];
+        function __construct($strArray, $urlImagen = "-"){            
+            $this->id = $strArray["id"];            
             $this->nombre = $strArray["nombre"];
             $this->email = $strArray["email"];
             $this->urlImagen = $urlImagen;
+            //var_dump($this);
         }        
 
         function ToJsonStr(){

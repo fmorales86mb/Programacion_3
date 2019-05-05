@@ -6,22 +6,57 @@
     $solicitud = $_SERVER["REQUEST_METHOD"];    
 
     switch($solicitud){
-        case "GET":            
-            // Trae item por nombre.
-            if(count($_GET) != 0){                
-                echo Get::GetProveedorByNombre($_GET["nombre"]);                
-            }
-            // Trae lista de items.
-            else{
-                echo Get::GetProveedores();
-            }            
+        case "GET":             
+            $caso = isset($_GET["caso"])?$_GET["caso"]:null;
+
+            switch($caso){
+                case "consultarProveedor":
+                    if(isset($_GET["nombre"])){                
+                        echo Get::GetProveedorByNombre($_GET["nombre"]);             
+                    }
+                    else{
+                        echo "Error consultarProveedor";
+                    }
+                    break;
+                case "proveedores":
+                    echo Get::GetProveedores();                    
+                    break;
+                case "listarPedidos":
+                    echo Get::GetPedidosProveedor();                     
+                    break;
+                case "pedidos":
+                    echo Get::GetPedidos();
+                    break;
+                case "consultarProveedorPorId":
+                    if(isset($_GET["id"])){                                        
+                        echo Get::GetProveedorById($_GET["id"]);              
+                    }
+                    else{
+                        echo "Error consultarProveedorPorId";
+                    }                    
+                    break;
+                case "listarPedidoProveedor":
+                    
+                    break;
+                default:
+                    echo "Error Get entidad.";
+                    break;
+            }                      
             break;
 
-       case "POST":
-            // Agrega item.
-            //var_dump($_POST);  
-            //var_dump($_FILES);                                        
-            Post::CargarProveedor($_POST, $_FILES);
-            break;
+        case "POST":     
+            $caso = isset($_POST["caso"])?$_POST["caso"]:null;
+       
+            switch($caso){
+                case "cargarProveedor":
+                    echo Post::CargarProveedor($_POST, $_FILES);
+                    break;
+                case "hacerPedido":
+                    echo Post::CargarPedido($_POST);
+                    break;
+                default:
+                    echo "Error Post entidad.";
+                    break;
+            }                          
     }
 ?>

@@ -1,0 +1,4 @@
+producto:saraza,cantidad:3,idProveedor:7,
+producto:pescado,cantidad:1,idProveedor:6,
+producto:pescado,cantidad:1,idProveedor:2,
+producto:perro,cantidad:5,idProveedor:7,
