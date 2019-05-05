@@ -36,7 +36,12 @@
                     }                    
                     break;
                 case "listarPedidoProveedor":
-                    
+                    if(isset($_GET["id"])){                
+                        echo Get::GetPedidosByIdProveedor($_GET["id"]);             
+                    }
+                    else{
+                        echo "Error listarPedidoProveedor";
+                    }
                     break;
                 default:
                     echo "Error Get entidad.";

@@ -68,5 +68,10 @@
             
             return json_encode($listaResultado);                                                
         }
+
+        public static function GetPedidosByIdProveedor($idProveedor){
+            $lista = PedidoDb::GetPedidoByIdProveedor($idProveedor);
+            return json_encode($lista);
+        }
     }
 ?>
