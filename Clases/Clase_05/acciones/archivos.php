@@ -2,8 +2,7 @@
     class Archivos{
 
         // Retorna una php array con los datos del archivo. 
-        public static function ExtraerMatizArchCsv($urlFile)
-        {
+        public static function ExtraerMatizArchCsv($urlFile){
             $file = fopen($urlFile, "r");
             $lista = array();
 
@@ -31,8 +30,7 @@
         }
 
         // Retorna un array con las líneas del archivo
-        public static function ExtraerArrayArchTxt($urlFile)
-        {
+        public static function ExtraerArrayArchTxt($urlFile){
             $file = fopen($urlFile, "r");
             $lista = array();
             
@@ -55,8 +53,7 @@
 
         // Retorna el array de strings con los datos de fila del id solicitado. En caso de 
         // no encontrarlo retorna NULL. El id se busca en el primer campo.
-        public static function GetRowById($urlFile, $id)
-        {
+        public static function GetRowById($urlFile, $id){
             $file = fopen($urlFile, "r");
             $fila= NULL;
 
@@ -77,8 +74,7 @@
         }
 
         // Abre si existe el archivo, lo crea sino, y escribe una línea al final. 
-        public static function EscribirLineaArch($fileUrl, $line)
-        {
+        public static function EscribirLineaArch($fileUrl, $line){
             $file = fopen($fileUrl, "a");
             $retorno = "No se pudo realizar la operación";
             if($file != NULL && $file != false)
@@ -91,16 +87,19 @@
             return $retorno;
         }
 
-        //
-        public static function SobreEscribirArch ($fileUrl, $txt)
-        {
+        // Pisa los datos del archivo con nuevos datos.
+        public static function SobreEscribirArchivo ($fileUrl, $txt){
             $file = fopen($fileUrl, "w");
+            $retorno = "Error archivo";
 
             if($file != NULL && $file != false)
             {
                 fwrite($file, $txt);
                 fclose($file);
-            } 
+                $retorno = $txt;
+            }
+
+            return $retorno;
         }
 
         // Devuelve la lectura de todo el archivo.

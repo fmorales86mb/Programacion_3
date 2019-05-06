@@ -59,6 +59,9 @@
                 case "hacerPedido":
                     echo Post::CargarPedido($_POST);
                     break;
+                case "modificarProveedor":
+                    echo Post::modificarProveedor($_POST, $_FILES);
+                    break;
                 default:
                     echo "Error Post entidad.";
                     break;

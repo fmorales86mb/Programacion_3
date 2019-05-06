@@ -50,11 +50,42 @@
             return $proveedor;
         }
 
+        // Guarda un proveedor y su imagen. Retorna el registro guardado en txt.
         public static function GuardarProveedor($data, $file){
             $proveedor = new Proveedor($data);                        
-            $imageUrl = Imagenes::GuardarImagen($file["imagen"], $proveedor->GetImageName());      
+            
+            $imageUrl = Imagenes::GuardarImagen(
+                $file["imagen"], 
+                $proveedor->GetImageName(), 
+                $proveedor->GetImageNameBackUp()
+            );      
+            
             $proveedor->urlImagen = $imageUrl;                  
             return Archivos::EscribirLineaArch(ProveedorDb::$fileUrlTxt, $proveedor->ToTxt());
+        }
+
+        // Actualiza Provedor por id.
+        public static function UpdateProveedor($data, $file){
+            $lista = ProveedorDB::GetProveedores();
+            $proveedor = new Proveedor($data); 
+            $strLista = "";           
+
+            for($i = 0; $i<count($lista); $i++){
+                if($lista[$i]->id == $proveedor->id){     
+                    // backup de imagen               
+                    Imagenes::BackUpImagen($lista[$i]->urlImagen, $lista[$i]->GetImageNameBackUp());
+
+                    $lista[$i]->nombre = $proveedor->nombre;
+                    $lista[$i]->email = $proveedor->email; 
+                    // reemplazo imagen.
+                    $url = Imagenes::GuardarImagen($file["imagen"], $lista[$i]->GetImageName());
+                    $lista[$i]->urlImagen = $url;                   
+                }
+
+                $strLista .= $lista[$i]->ToTxt()."\n";
+            }
+
+            return Archivos::SobreEscribirArchivo(ProveedorDb::$fileUrlTxt, $strLista);
         }
     }
 ?>

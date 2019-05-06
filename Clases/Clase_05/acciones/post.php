@@ -20,6 +20,10 @@
 
             return $retorno;
         }
+
+        public static function modificarProveedor($data, $file){
+            return ProveedorDb::UpdateProveedor($data, $file);
+        }
     }
 
 ?>
