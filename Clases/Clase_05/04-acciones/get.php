@@ -1,9 +1,9 @@
 <?php
-    include_once "./entidades/proveedor.php";
-    include_once "./entidades/pedido.php";
-    include_once "./db/proveedorDb.php";
-    include_once "./db/pedidoDb.php"; 
-    include_once "./acciones/directorios.php";   
+    include_once "./02-entidades/proveedor.php";
+    include_once "./02-entidades/pedido.php";
+    include_once "./03-db/proveedorDb.php";
+    include_once "./03-db/pedidoDb.php"; 
+    include_once "./01-fwk/directorios.php";   
 
     class Get{
 
@@ -35,7 +35,7 @@
             $proveedor = ProveedorDb::GetProveedorById($id);
             $strRespuesta = "Error GetProveedorById";
 
-            if($proveedor == null){
+            if($proveedor === null){
                 $strRespuesta = false;
             }
             else{
@@ -80,7 +80,7 @@
 
         // Devuelve la lista de Fotos con nombre del proveedor y fecha creación.
         public static function GetFotosBack(){
-            $fileList = Directorio::GetFilesList("./backUpFotos/");
+            $fileList = Directorio::GetFilesList("./05-data/backUpFotos/");
             $result = array();
             
             foreach($fileList as $item){

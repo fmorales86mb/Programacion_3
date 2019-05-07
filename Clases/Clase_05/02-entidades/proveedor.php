@@ -4,10 +4,7 @@
         public $id;
         public $nombre;
         public $email;
-        public $urlImagen;
-                
-        private $fileUrlImage = "./data/imagenes/";
-        private $fileUrlImageBackUp = "./backUpFotos/";
+        public $urlImagen;            
                 
         public function __construct($strArray, $urlImagen = "-"){            
             $this->id = $strArray["id"];            
@@ -24,14 +21,14 @@
             return "id:$this->id,nombre:$this->nombre,email:$this->email,urlImagen:$this->urlImagen,";
         }
 
-        public function GetImageName(){
-            $url = "$this->fileUrlImage$this->id-$this->nombre";            
+        public function GetImageName($directorio){
+            $url = "$directorio$this->id-$this->nombre";            
             return $url;
         }
 
-        public function GetImageNameBackUp(){
+        public function GetImageNameBackUp($directorio){
             $fecha = date("Y-m-d.H-i-s");
-            $url = "$this->fileUrlImageBackUp$this->id.$fecha";            
+            $url = "$directorio$this->id.$fecha";            
             return $url;
         }
     }

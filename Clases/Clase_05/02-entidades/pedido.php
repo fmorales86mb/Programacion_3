@@ -2,9 +2,7 @@
     class Pedido{
         public $producto;
         public $cantidad;
-        public $idProveedor;
-
-        public static $fileUrlTxt = "./data/pedidos.txt";
+        public $idProveedor;        
 
         function __construct($strArray){
             $this->producto = $strArray["producto"];

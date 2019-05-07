@@ -1,7 +1,7 @@
 <?php
     //include_once "./entidades/proveedor.php";
-    include_once "./acciones/post.php";
-    include_once "./acciones/get.php";
+    include_once "./04-acciones/post.php";
+    include_once "./04-acciones/get.php";
 
     $solicitud = $_SERVER["REQUEST_METHOD"];    
 

@@ -1,7 +1,0 @@
-id:1,nombre:Federico,email:Fede@gmail,urlImagen:./data/imagenes/1-Federico.png,
-id:2,nombre:Paula,email:Pau@gmail,urlImagen:./data/imagenes/2-Paula.png,
-id:3,nombre:Cambio,email:cambio@lapindonga.com,urlImagen:./data/imagenes/3-Cambio.jpeg,
-id:4,nombre:Tito Pulo,email:Tito@gmail,urlImagen:./data/imagenes/4-Tito Pulo.jpeg,
-id:5,nombre:Bach,email:Bachicho@gmail,urlImagen:./data/imagenes/5-Bach.png,
-id:6,nombre:Atahualpa,email:atahualpino@gmail,urlImagen:./data/imagenes/6-Atahualpa.png,
-id:7,nombre:Moncho,email:monchito@gmail,urlImagen:./data/imagenes/7-Moncho.png,

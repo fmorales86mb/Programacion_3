@@ -1,10 +1,12 @@
 <?php
-    include_once "./acciones/archivos.php";
-    include_once "./entidades/proveedor.php";
-    include_once "./acciones/imagenes.php";
-
-    class ProveedorDb{
-        private static $fileUrlTxt = "./data/proveedores.txt";
+    include_once "./01-fwk/archivos.php";
+    include_once "./01-fwk/imagenes.php";
+    include_once "./02-entidades/proveedor.php";
+    
+    class ProveedorDb{        
+        private static $fileUrlTxt = "./05-data/proveedores.txt";
+        private static $fileUrlImage = "./05-data/imagenes/";
+        private static $fileUrlImageBackUp = "./05-data/backUpFotos/";
 
         // Devuelve una lista de objetos Proveedor.
         public static function GetProveedores(){
@@ -37,7 +39,7 @@
         // Devuelve un objeto Proveedor por id.
         public static function GetProveedorById($id){            
             $objArray = Archivos::ExtraerMatizArchCsv(ProveedorDb::$fileUrlTxt);   
-            $proveedor = "No existe el id.";                     
+            $proveedor = null;                     
 
             for($i =0; $i<count($objArray); $i++){                          
                 $proveedorAux = new Proveedor($objArray[$i], $objArray[$i]["urlImagen"]);  
@@ -56,8 +58,8 @@
             
             $imageUrl = Imagenes::GuardarImagen(
                 $file["imagen"], 
-                $proveedor->GetImageName(), 
-                $proveedor->GetImageNameBackUp()
+                $proveedor->GetImageName(ProveedorDb::$fileUrlImage), 
+                $proveedor->GetImageNameBackUp(ProveedorDb::$fileUrlImageBackUp)
             );      
             
             $proveedor->urlImagen = $imageUrl;                  
@@ -73,12 +75,12 @@
             for($i = 0; $i<count($lista); $i++){
                 if($lista[$i]->id == $proveedor->id){     
                     // backup de imagen               
-                    Imagenes::BackUpImagen($lista[$i]->urlImagen, $lista[$i]->GetImageNameBackUp());
+                    Imagenes::BackUpImagen($lista[$i]->urlImagen, $lista[$i]->GetImageNameBackUp(ProveedorDb::$fileUrlImageBackUp));
 
                     $lista[$i]->nombre = $proveedor->nombre;
                     $lista[$i]->email = $proveedor->email; 
                     // reemplazo imagen.
-                    $url = Imagenes::GuardarImagen($file["imagen"], $lista[$i]->GetImageName());
+                    $url = Imagenes::GuardarImagen($file["imagen"], $lista[$i]->GetImageName(ProveedorDb::$fileUrlImage));
                     $lista[$i]->urlImagen = $url;                   
                 }
 

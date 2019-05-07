@@ -1,0 +1,2 @@
+producto:Bolsas,cantidad:20,idProveedor:6,
+producto:perlas,cantidad:20,idProveedor:7,

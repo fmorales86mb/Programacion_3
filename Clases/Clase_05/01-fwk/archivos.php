@@ -25,7 +25,7 @@
                 }            
                 fclose($file);
             }    
-            //var_dump($lista);
+            
             return $lista;
         }
 

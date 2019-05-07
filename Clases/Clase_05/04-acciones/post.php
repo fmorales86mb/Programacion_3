@@ -1,8 +1,8 @@
 <?php
-    include_once "./entidades/proveedor.php";
-    include_once "./entidades/pedido.php";
-    include_once "./acciones/get.php";
-    include_once "./acciones/imagenes.php";
+    include_once "./02-entidades/proveedor.php";
+    include_once "./02-entidades/pedido.php";
+    include_once "./04-acciones/get.php";
+    include_once "./01-fwk/imagenes.php";
 
     class Post{
         
@@ -14,8 +14,9 @@
             $pedido = new Pedido($data);            
             $dataProveedor = Get::GetProveedorById($pedido->idProveedor);
             $retorno = "No existe el Proveedor";            
+            
             if($dataProveedor != false){
-                $retorno = Archivos::EscribirLineaArch(Pedido::$fileUrlTxt, $pedido->ToTxt());
+                $retorno = Archivos::EscribirLineaArch(PedidoDb::$fileUrlTxt, $pedido->ToTxt());
             }
 
             return $retorno;
