@@ -43,6 +43,9 @@
                         echo "Error listarPedidoProveedor";
                     }
                     break;
+                case "fotosBack":
+                    echo Get::GetFotosBack();
+                    break;
                 default:
                     echo "Error Get entidad.";
                     break;

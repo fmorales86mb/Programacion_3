@@ -1,4 +1,3 @@
-producto:saraza,cantidad:3,idProveedor:7,
-producto:pescado,cantidad:1,idProveedor:6,
-producto:pescado,cantidad:1,idProveedor:2,
-producto:perro,cantidad:5,idProveedor:7,
+producto:Celular,cantidad:5,idProveedor:7,
+producto:Harina,cantidad:240,idProveedor:4,
+producto:Bolsas,cantidad:20,idProveedor:4,

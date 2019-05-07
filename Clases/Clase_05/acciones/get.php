@@ -2,7 +2,8 @@
     include_once "./entidades/proveedor.php";
     include_once "./entidades/pedido.php";
     include_once "./db/proveedorDb.php";
-    include_once "./db/pedidoDb.php";    
+    include_once "./db/pedidoDb.php"; 
+    include_once "./acciones/directorios.php";   
 
     class Get{
 
@@ -50,6 +51,7 @@
             return json_encode($listaPedidos);
         }  
         
+         // Devuelve la lista de pedidos con el nombre del proveedor en formato Json.
         public static function GetPedidosProveedor(){
             $listaPedidos = PedidoDb::GetPedidos();
             $listaResultado;
@@ -69,9 +71,26 @@
             return json_encode($listaResultado);                                                
         }
 
+         // Devuelve la lista de pedidos según el idProveedor en formato Json.
         public static function GetPedidosByIdProveedor($idProveedor){
             $lista = PedidoDb::GetPedidoByIdProveedor($idProveedor);
+            
             return json_encode($lista);
+        }
+
+        // Devuelve la lista de Fotos con nombre del proveedor y fecha creación.
+        public static function GetFotosBack(){
+            $fileList = Directorio::GetFilesList("./backUpFotos/");
+            $result = array();
+            
+            foreach($fileList as $item){
+                $arrayName = explode(".", $item);                
+                $proveedor = ProveedorDB::GetProveedorById($arrayName[0]);
+                $row = array("File Name" => $item, "Proveedor" => $proveedor->nombre, "Fecha Creacion" => $arrayName[1]);
+                $result[] = $row;
+            }
+            
+            return json_encode($result);
         }
     }
 ?>

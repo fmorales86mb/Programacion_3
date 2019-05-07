@@ -37,7 +37,7 @@
         // Devuelve un objeto Proveedor por id.
         public static function GetProveedorById($id){            
             $objArray = Archivos::ExtraerMatizArchCsv(ProveedorDb::$fileUrlTxt);   
-            $proveedor;                     
+            $proveedor = "No existe el id.";                     
 
             for($i =0; $i<count($objArray); $i++){                          
                 $proveedorAux = new Proveedor($objArray[$i], $objArray[$i]["urlImagen"]);  

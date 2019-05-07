@@ -31,7 +31,7 @@
 
         public function GetImageNameBackUp(){
             $fecha = date("Y-m-d.H-i-s");
-            $url = "$this->fileUrlImageBackUp$this->id-$fecha";            
+            $url = "$this->fileUrlImageBackUp$this->id.$fecha";            
             return $url;
         }
     }

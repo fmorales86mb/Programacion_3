@@ -7,7 +7,7 @@
         // Devuelve una lista de objetos Pedido.
         public static function GetPedidos(){
             $objArray = Archivos::ExtraerMatizArchCsv(Pedido::$fileUrlTxt);            
-            $lista;            
+            $lista = "Sin pedidos";            
             
             for($i =0; $i<count($objArray); $i++){                          
                 $item = new Pedido($objArray[$i]);              
@@ -20,7 +20,7 @@
         // Devuelve una lista de objetos Pedido con determinado IdProveedor.
         public static function GetPedidoByIdProveedor($idProveedor){
             $objArray = Archivos::ExtraerMatizArchCsv(Pedido::$fileUrlTxt);            
-            $lista;            
+            $lista = "Sin pedidos";            
             
             for($i =0; $i<count($objArray); $i++){                          
                 $item = new Pedido($objArray[$i]);              
