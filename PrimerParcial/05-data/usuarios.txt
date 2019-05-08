@@ -1,0 +1,5 @@
+clave:123,nombre:Federico,
+clave:321,nombre:Paula,
+clave:456,nombre:Juan,
+clave:456,nombre:JuaN,
+clave:333,nombre:mario,

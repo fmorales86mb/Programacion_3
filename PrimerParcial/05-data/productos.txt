@@ -1,0 +1,2 @@
+id:100,nombre:kkkkkasdf,precio:154,usuario:mario,urlImagen:./05-data/imagenes/100-kkkkkasdf.jpeg,
+id:101,nombre:uva,precio:205,usuario:mario,urlImagen:./05-data/imagenes/101-uva.jpeg,
