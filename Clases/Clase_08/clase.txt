@@ -1,0 +1,6 @@
+Slim
+
+[asdf] indica opcion, puede o no estar
+{asdf} define variable
+
+.httpaccess para configuar apache.
