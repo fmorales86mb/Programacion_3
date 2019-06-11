@@ -1,11 +1,10 @@
 <?php   
-    class Empleado{
+    class Item{
         
         public $id;
-        public $nombre;
-        public $apellido;
-        public $tarea_id;
-        public $sector_id;  
+        public $descripcion;
+        public $sector_id;
+        public $precio;                  
         
         public function __construct(){                
         }                         

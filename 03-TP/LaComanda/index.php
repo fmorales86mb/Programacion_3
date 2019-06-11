@@ -11,6 +11,7 @@
 
     $app = new \Slim\App(['settings' => $config]);
     
+    // Empleados ABM
     $app->group('/empleados', function () {
 
         $this->get('/{id}', \EmpleadoApi::class . ':TraerUno');
@@ -19,21 +20,23 @@
 
         $this->post('/', \EmpleadoApi::class . ':CargarUno');
 
-        $this->put('/', function (Request $request, Response $response) {
-            $data = $request->getParsedBody();        
-            $nombre = $data["name"];
-            $response->write("Put $nombre");
-        
-            return $response;
-        });
+        $this->put('/', \EmpleadoApi::class . ':ModificarUno');
 
-        $this->delete('/', function (Request $request, Response $response) {
-            $data = $request->getParsedBody();        
-            $nombre = $data["name"];
-            $response->write("Delete $nombre");
-        
-            return $response;
-        });        
+        $this->delete('/', \EmpleadoApi::class . ':BorrarUno');        
+    });
+
+    // Item ABM
+    $app->group('/items', function () {
+
+        $this->get('/{id}', \ItemApi::class . ':TraerUno');
+
+        $this->get('/', \ItemApi::class . ':TraerTodos');
+
+        $this->post('/', \ItemApi::class . ':CargarUno');
+
+        $this->put('/', \ItemApi::class . ':ModificarUno');
+
+        $this->delete('/', \ItemApi::class . ':BorrarUno');        
     });
 
     $app->run();

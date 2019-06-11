@@ -1,14 +1,14 @@
 <?php
-    include_once "./03-DAO/EmpleadoDAO.php";
-    require_once './02-Entidades/Empleado.php';
+    include_once "./03-DAO/ItemDAO.php";
+    require_once './02-Entidades/Item.php';
     require_once './05-Interfaces/IAccionesABM.php';
 
-    class EmpleadoApi implements IAccionesABM{
+    class ItemApi implements IAccionesABM{
         
         // Retorna json del empleado.
         public function TraerUno($request, $response, $args) {
             $id = $args["id"];
-            $obj = EmpleadoDAO::GetById($id);            
+            $obj = ItemDAO::GetById($id);            
             
             $response->write(json_encode($obj));        
             return $response;
@@ -16,7 +16,7 @@
 
         // Retorna array json de todos los empleados.
         public function TraerTodos($request, $response, $args) {
-            $lista = EmpleadoDAO::GetAll();
+            $lista = ItemDAO::GetAll();
             $strRespuesta;                              
   
             if(count($lista)<1){
@@ -36,13 +36,12 @@
         public function CargarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
             
-            $elemento = new Empleado();
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
-            $elemento->apellido = isset($data["apellido"])?$data["apellido"]:null;
-            $elemento->tarea_id = isset($data["tarea_id"])?$data["tarea_id"]:null;
-            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;                        
+            $elemento = new Item();
+            $elemento->descripcion = isset($data["descripcion"])?$data["descripcion"]:null;
+            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;
+            $elemento->precio = isset($data["precio"])?$data["precio"]:null;                                   
 
-            $response->write(EmpleadoDAO::Insert($elemento));        
+            $response->write(ItemDAO::Insert($elemento));        
             return $response;
         }
 
@@ -50,14 +49,13 @@
         public function ModificarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
                         
-            $elemento = new Empleado();
+            $elemento = new Item();
             $elemento->id = isset($data["id"])?$data["id"]:null;
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
-            $elemento->apellido = isset($data["apellido"])?$data["apellido"]:null;
-            $elemento->tarea_id = isset($data["tarea_id"])?$data["tarea_id"]:null;
-            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;  
+            $elemento->descripcion = isset($data["descripcion"])?$data["descripcion"]:null;
+            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;
+            $elemento->precio = isset($data["precio"])?$data["precio"]:null; 
                         
-            $response->write(EmpleadoDAO::Update($elemento));        
+            $response->write(ItemDAO::Update($elemento));        
             return $response;
         }
 
@@ -66,7 +64,7 @@
             $data = $request->getParsedBody();        
             $id = isset($data["id"])?$data["id"]:null;
             
-            $response->write(EmpleadoDAO::Delete($id));        
+            $response->write(ItemDAO::Delete($id));        
             return $response;
         }
     }
