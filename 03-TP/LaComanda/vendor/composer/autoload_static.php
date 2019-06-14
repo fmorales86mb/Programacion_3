@@ -26,6 +26,7 @@ class ComposerStaticInit43149ce061b132de2b304626b7d0c1d2
         ),
         'F' => 
         array (
+            'Firebase\\JWT\\' => 13,
             'FastRoute\\' => 10,
         ),
     );
@@ -46,6 +47,10 @@ class ComposerStaticInit43149ce061b132de2b304626b7d0c1d2
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'FastRoute\\' => 
         array (

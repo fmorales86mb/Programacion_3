@@ -2,8 +2,9 @@
     include_once "./02-Entidades/Identificadores.php";
     include_once "./02-Entidades/Empleado.php";
     include_once "./03-DAO/AccesoDatos.php";    
+    include_once './05-Interfaces/IDaoABM.php';
 
-    class EmpleadoDAO{   
+    class EmpleadoDAO implements IDaoABM{   
         const CLASSNAME = 'Empleado';
         
         // Traigo Elemento por id.

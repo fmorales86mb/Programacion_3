@@ -1,9 +1,10 @@
 <?php
     include_once "./02-Entidades/Identificadores.php";
     include_once "./02-Entidades/Item.php";
-    include_once "./03-DAO/AccesoDatos.php";    
+    include_once "./03-DAO/AccesoDatos.php"; 
+    include_once './05-Interfaces/IDaoABM.php';   
 
-    class ItemDAO{   
+    class ItemDAO implements IDaoABM{   
         const CLASSNAME = 'Item';
         
         // Traigo Elemento por id.

@@ -10,8 +10,8 @@
             $id = $args["id"];
             $obj = EmpleadoDAO::GetById($id);            
             
-            $response->write(json_encode($obj));        
-            return $response;
+            $JsonResponse = $response->withJson($obj, 200);        
+            return $JsonResponse;
         }
 
         // Retorna array json de todos los empleados.
@@ -28,8 +28,8 @@
                 }                
             }
             
-            $response->write(json_encode($strRespuesta));
-            return $response; 
+            $JsonResponse = $response->withJson($strRespuesta, 200);                    
+            return $JsonResponse; 
         }
 
         // Recibe datos en el body y pasa objeto al DAO para insertarlo. 
@@ -41,9 +41,9 @@
             $elemento->apellido = isset($data["apellido"])?$data["apellido"]:null;
             $elemento->tarea_id = isset($data["tarea_id"])?$data["tarea_id"]:null;
             $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;                        
-
-            $response->write(EmpleadoDAO::Insert($elemento));        
-            return $response;
+                  
+            $JsonResponse = $response->withJson(EmpleadoDAO::Insert($elemento), 200);                    
+            return $JsonResponse;
         }
 
         // Crea un Elemento y se lo pasa al DAO para que haga el Update.
