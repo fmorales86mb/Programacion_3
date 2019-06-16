@@ -3,7 +3,7 @@
         
         public $id;
         public $descripcion;
-        public $sector_id;
+        public $sector;
         public $precio;                  
         
         public function __construct(){                

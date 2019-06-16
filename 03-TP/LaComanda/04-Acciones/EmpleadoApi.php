@@ -39,10 +39,15 @@
             $elemento = new Empleado();
             $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
             $elemento->apellido = isset($data["apellido"])?$data["apellido"]:null;
-            $elemento->tarea_id = isset($data["tarea_id"])?$data["tarea_id"]:null;
-            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;                        
-                  
-            $JsonResponse = $response->withJson(EmpleadoDAO::Insert($elemento), 200);                    
+            $elemento->tarea = isset($data["tarea"])?$data["tarea"]:null;                                   
+               
+            if(EmpleadoDAO::Insert($elemento)){
+                $JsonResponse = $response->withJson(true, 200);     
+            }
+            else{
+                $JsonResponse = $response->withJson(false, 400);                    
+            }
+            
             return $JsonResponse;
         }
 
@@ -54,11 +59,16 @@
             $elemento->id = isset($data["id"])?$data["id"]:null;
             $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
             $elemento->apellido = isset($data["apellido"])?$data["apellido"]:null;
-            $elemento->tarea_id = isset($data["tarea_id"])?$data["tarea_id"]:null;
-            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;  
-                        
-            $response->write(EmpleadoDAO::Update($elemento));        
-            return $response;
+            $elemento->tarea = isset($data["tarea"])?$data["tarea"]:null; 
+                
+            if(EmpleadoDAO::Update($elemento)){
+                $JsonResponse = $response->withJson(true, 200);     
+            }
+            else{
+                $JsonResponse = $response->withJson(false, 400);                    
+            }
+
+            return $JsonResponse;
         }
 
         // Elimina un Elemento por id.
@@ -66,8 +76,14 @@
             $data = $request->getParsedBody();        
             $id = isset($data["id"])?$data["id"]:null;
             
-            $response->write(EmpleadoDAO::Delete($id));        
-            return $response;
+            if(EmpleadoDAO::Delete($id)){
+                $JsonResponse = $response->withJson(true, 200);     
+            }
+            else{
+                $JsonResponse = $response->withJson(false, 400);                    
+            }
+
+            return $JsonResponse;
         }
     }
 ?>

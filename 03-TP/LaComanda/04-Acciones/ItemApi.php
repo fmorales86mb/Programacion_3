@@ -38,7 +38,7 @@
             
             $elemento = new Item();
             $elemento->descripcion = isset($data["descripcion"])?$data["descripcion"]:null;
-            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;
+            $elemento->sector = isset($data["sector"])?$data["sector"]:null;
             $elemento->precio = isset($data["precio"])?$data["precio"]:null;                                   
 
             $response->write(ItemDAO::Insert($elemento));        
@@ -52,7 +52,7 @@
             $elemento = new Item();
             $elemento->id = isset($data["id"])?$data["id"]:null;
             $elemento->descripcion = isset($data["descripcion"])?$data["descripcion"]:null;
-            $elemento->sector_id = isset($data["sector_id"])?$data["sector_id"]:null;
+            $elemento->sector = isset($data["sector"])?$data["sector"]:null;
             $elemento->precio = isset($data["precio"])?$data["precio"]:null; 
                         
             $response->write(ItemDAO::Update($elemento));        

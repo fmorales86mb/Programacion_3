@@ -1,20 +1,38 @@
 <?php
-    abstract class Tarea
-    {
-        const Bartender = 1;
-        const Cervecero = 2;
-        const Cocinero = 3;
-        const Mozo = 4;
-        const Socio = 5; 
-    } 
+    
+    class Indentificadores{
+        public static $Tarea  = array(
+            "Bartender" => 1,
+            "Cervecero" => 2,
+            "Cocinero" => 3,
+            "Mozo" => 4,
+            "Socio" => 5                    
+        );  
+        
+        public static $Sector = array(
+            "Barra de tragos y vinos" => 1,
+            "Barra de cerveza" => 2,
+            "Cocina" => 3,
+            "Candy bar" => 4,
+            "Administración" => 5,
+            "Mesas" => 6
+        );
 
-    abstract class Sector
-    {
-        const BarraTragos = 1;
-        const BarraCerveza = 2;
-        const Cocina = 3;
-        const CandyBar = 4;
-        const Administracion = 5;  
-        const Mesas = 6;
+        public static $Estado = array(
+            "Barra de tragos y vinos" => 1,            
+        );
+
+        public static function GetDescriptionById($array, $id){        
+            $tarea = "Tarea no registrada";                        
+            
+            foreach($array as $clave => $valor){
+                if ($valor == $id) {
+                    $tarea = $clave;
+                    break;
+                }                            
+            }
+
+            return $tarea;
+        }
     } 
 ?>

@@ -49,7 +49,7 @@ class AutenticacionAPI{
         if (UsuarioDAO::ConsultarUsuario($nombre, $clave)){
             $payload = array(
                 'iat' => $ahora,
-                'exp' => $ahora + (300),
+                //'exp' => $ahora + (300),
                 'app' => "API FM"
             );
     

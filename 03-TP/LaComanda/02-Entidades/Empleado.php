@@ -4,8 +4,8 @@
         public $id;
         public $nombre;
         public $apellido;
-        public $tarea_id;
-        public $sector_id;  
+        public $tarea;
+        public $sector;              
         
         public function __construct(){                
         }                         
