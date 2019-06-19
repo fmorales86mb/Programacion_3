@@ -1,59 +1,41 @@
 <?php
     include_once "./02-Entidades/Identificadores.php";
     include_once "./02-Entidades/Usuario.php";
-    include_once "./03-DAO/AccesoDatos.php";  
+    include_once "./03-DAO/AccesoDatos.php";    
+    include_once './05-Interfaces/IDaoABM.php';
 
     class UsuarioDAO{   
         const CLASSNAME = 'Usuario';
         
-        // Retorna true si existe la tupa en la DB.
-        public static function ConsultarUsuario($nombre, $clave){
-            $retorno = false;           
-            $query = "SELECT id FROM `usuarios` WHERE usuarios.nombre = :nombre and usuarios.clave = :clave ";
+        // Traigo Elemento por id.
+        public static function GetById($id){
+            $retorno = null;                       
             
+            $query = "SELECT `id`, `nombre`, `rol` FROM `usuario` WHERE 'id' = :id";            
+
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();               
                 $sentencia = $db->RetornarConsulta($query); 
-                $sentencia->bindValue(':nombre',  $nombre, PDO::PARAM_STR);
-                $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
+                $sentencia->bindValue(':id',  $id, PDO::PARAM_INT); 
                 
-                $sentencia->execute();                 
-                if($sentencia->fetch() > 0){
-                    $retorno = true;
-                }                                                
+                $sentencia->execute(); 
+                
+                $retorno = $sentencia->fetchObject(self::CLASSNAME);                                    
+                                                  
             } catch (PDOException $e) {
-                $retorno = false;                  
+                $retorno = -1;                  
             }
             
             return $retorno;
-        }
-
-        // Traigo Elemento por id.
-        public static function GetById($id){
-            // $retorno = null;           
-            // $query = "SELECT * FROM `item`  WHERE `id`= :id";
-            
-            // try{
-            //     $db = AccesoDatos::DameUnObjetoAcceso();               
-            //     $sentencia = $db->RetornarConsulta($query); 
-            //     $sentencia->bindValue(':id',  $id, PDO::PARAM_INT); 
-                
-            //     $sentencia->execute(); 
-                
-            //     $retorno = $sentencia->fetchObject(self::CLASSNAME);                                    
-                                                  
-            // } catch (PDOException $e) {
-            //     $retorno = -1;                  
-            // }
-            
-            // return $retorno;
         }   
         
         // Traigo todos los Elementos de la DB.
         public static function GetAll(){
             $retorno = array();           
-            $query = "SELECT 'id', 'nombre' FROM `usuarios`";
             
+            $query = "SELECT `id`, `nombre`, `rol` FROM `usuario`";
+            
+            var_dump($query);
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();               
                 $sentencia = $db->RetornarConsulta($query); 
@@ -70,65 +52,94 @@
 
         // Guarda un elemento. Retorna el id guardado. (retorna false ahora).
         public static function Insert($elemento, $clave){
-            $retorno = null;           
-            $query = "INSERT INTO `usuarios`(`nombre`, `clave`) VALUES (:nombre, :clave)";            
+            $retorno = false;           
             
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();                 
-                $sentencia = $db->RetornarConsulta($query);
-                $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
-                $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR);                                  
-                
-                $sentencia->execute(); 
-                
-                $retorno = $sentencia->fetch();                                                                          
-            } catch (PDOException $e) {
-                $retorno = -1;
+            $query = "INSERT INTO `usuario`(`nombre`, `clave`, `rol`) ";
+            $query .="VALUES (:nombre, :clave, :rol)";                         
+            
+            if ($tarea_id !== null){
+                try{
+                    $db = AccesoDatos::DameUnObjetoAcceso();                 
+                    $sentencia = $db->RetornarConsulta($query);
+                    $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
+                    $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
+                    $sentencia->bindValue(':rol',  $elemento->rol, PDO::PARAM_INT);                     
+                    
+                    $sentencia->execute(); 
+                    
+                    $retorno = true;                                                                          
+                } catch (PDOException $e) {
+                    $retorno = false;
+                }
+            }
+
+            return $retorno;
+        }
+
+        // Modifica los datos de un elemento en la DB por el id.
+        public static function Update($elemento, $clave){
+            $retorno = false;           
+            
+            $query = "UPDATE `usuario` SET `nombre`= :nombre,`clave`= :clave,`rol`=:rol WHERE 'id'= :id";                        
+            
+            if ($tarea_id !== null){
+                try{
+                    $db = AccesoDatos::DameUnObjetoAcceso();                 
+                    $sentencia = $db->RetornarConsulta($query); 
+                    $sentencia->bindValue(':id',  $elemento->id, PDO::PARAM_INT);
+                    $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
+                    $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
+                    $sentencia->bindValue(':rol',  $elemento->rol, PDO::PARAM_INT);                  
+                    
+                    $sentencia->execute(); 
+                    
+                    $retorno = true;                                  
+                } catch (PDOException $e) {
+                    $retorno = false;
+                }
             }
             
             return $retorno;
         }
 
-        // Modifica los datos de un elemento en la DB por el id.
-        public static function Update($elemento){
-            // $retorno = null;           
-            // $query = "UPDATE `item` SET `descripcion`= :descripcion,`sector_id`= :sector_id,`precio`= :precio WHERE id = :id";            
-            // try{
-            //     $db = AccesoDatos::DameUnObjetoAcceso();                 
-            //     $sentencia = $db->RetornarConsulta($query); 
-            //     $sentencia->bindValue(':id',  $elemento->id, PDO::PARAM_INT);
-            //     $sentencia->bindValue(':descripcion',  $elemento->descripcion, PDO::PARAM_STR);
-            //     $sentencia->bindValue(':sector_id',  $elemento->sector_id, PDO::PARAM_INT); 
-            //     $sentencia->bindValue(':precio',  $elemento->precio, PDO::PARAM_INT);   
-                
-            //     $sentencia->execute(); 
-                
-            //     $retorno = $sentencia->fetch();                                  
-            // } catch (PDOException $e) {
-            //     $retorno = -1;
-            // }
-            
-            // return $retorno;
-        }
-
         // Borra el registro de un elemento en DB por el id.
         public static function Delete($id){
-            // $retorno = null;           
-            // $query = "DELETE FROM `item` WHERE id = :id";
+            $retorno = false;           
+            $query = "DELETE FROM `usuario` WHERE id = :id";
             
-            // try {
-            //     $db = AccesoDatos::DameUnObjetoAcceso(); 
-            //     $sentencia = $db->RetornarConsulta($query);
-            //     $sentencia->bindValue(':id',  $id, PDO::PARAM_INT);
+            try {
+                $db = AccesoDatos::DameUnObjetoAcceso(); 
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':id',  $id, PDO::PARAM_INT);
                 
-            //     $sentencia->execute(); 
+                $sentencia->execute(); 
                 
-            //     $retorno = $sentencia->fetch();                                          
-            // } catch (PDOException $e) {
-            //     $retorno = -1;
-            // }
+                $retorno = true;                                          
+            } catch (PDOException $e) {
+                $retorno = false;
+            }
             
-            // return $retorno;
+            return $retorno;
+        }
+
+        // Consulta rol de usuario por nombre y clave.
+        public static function ConsultarUsuario($nombre, $clave){
+            $retorno = false;           
+            $query = "SELECT u.rol FROM usuario as u WHERE u.nombre= :nombre AND u.clave = :clave";
+            
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();               
+                $sentencia = $db->RetornarConsulta($query); 
+                $sentencia->bindValue(':nombre',  $nombre, PDO::PARAM_STR);
+                $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
+                
+                $sentencia->execute();                 
+                $retorno = $sentencia->fetch();                                      
+            } catch (PDOException $e) {
+                $retorno = false;                  
+            }
+            
+            return $retorno;
         }
     }
 ?>

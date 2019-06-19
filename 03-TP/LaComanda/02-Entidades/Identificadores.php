@@ -1,12 +1,13 @@
 <?php
     
     class Indentificadores{
-        public static $Tarea  = array(
+        public static $Rol  = array(
             "Bartender" => 1,
             "Cervecero" => 2,
             "Cocinero" => 3,
             "Mozo" => 4,
-            "Socio" => 5                    
+            "Socio" => 5, 
+            "Cliente" => 6                   
         );  
         
         public static $Sector = array(

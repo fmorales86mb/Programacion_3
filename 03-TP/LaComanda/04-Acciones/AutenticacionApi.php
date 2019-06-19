@@ -29,11 +29,10 @@ class AutenticacionAPI{
         $data = getallheaders();        
         $token = isset($data["token"])?$data["token"]:"";
 
-        $esValido = $this->ValidarToken($token);
+        $rol = $this->ValidarToken($token);
         
-        if($esValido){
-            $response = $next($request, $response);
-            //$response->write("ok!");
+        if($rol != false){
+            $response = $next($request, $response);            
             return $response;            
         }
         else{
@@ -42,15 +41,35 @@ class AutenticacionAPI{
         }        
     }   
 
+    // Valida el Token rol 5
+    public function ValidarSessionSocio($request, $response, $next) {        
+        $data = getallheaders();        
+        $token = isset($data["token"])?$data["token"]:"";
+
+        $deco = $this->ValidarToken($token);
+
+        if($deco->rol == 5){
+            $response = $next($request, $response);            
+            return $response;            
+        }
+        else{
+            $response->write("inválido");
+            return $response;
+        }        
+    } 
+
     private function CrearToken($nombre, $clave){
         $token = false;
         $ahora = time();
+        
+        $rol = UsuarioDAO::ConsultarUsuario($nombre, $clave);
 
-        if (UsuarioDAO::ConsultarUsuario($nombre, $clave)){
+        if ($rol != null){        
             $payload = array(
                 'iat' => $ahora,
                 //'exp' => $ahora + (300),
-                'app' => "API FM"
+                'app' => "API FM",
+                'rol' => $rol[0]
             );
     
             $token = JWT::encode($payload, self::CLAVE);
@@ -59,6 +78,7 @@ class AutenticacionAPI{
         return $token;
     } 
 
+    // Verifica que el token sea vàlido y lo retorna como un objeto.
     private function ValidarToken($token){
         $valido = false;        
 
@@ -75,13 +95,13 @@ class AutenticacionAPI{
                     ['HS256']
                 );
 
-                if($decodificado !== null){
-                    $valido = true;
+                if($decodificado !== null && $decodificado != ""){
+                    $valido = $decodificado;
                 }
             }
             catch(Exception $ex)
             {                
-                //throw $ex;                
+                $valido = false;                
             }
         }
         

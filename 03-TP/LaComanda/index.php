@@ -1,7 +1,7 @@
 <?php
-    include_once "./04-Acciones/EmpleadoApi.php";
-    include_once "./04-Acciones/ItemApi.php";
-    include_once "./04-Acciones/UsuarioApi.php";
+    include_once "./04-Acciones/UsuarioAPI.php";
+    // include_once "./04-Acciones/ItemApi.php";
+    // include_once "./04-Acciones/UsuarioApi.php";
     include_once "./04-Acciones/AutenticacionApi.php";
 
     use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -17,47 +17,20 @@
     // Login
     $app->post('/login', \AutenticacionApi::class . ':Login');
 
-    // Empleados ABM
-    $app->group('/empleados', function () {
-
-        $this->get('/{id}', \EmpleadoApi::class . ':TraerUno');
-
-        $this->get('/', \EmpleadoApi::class . ':TraerTodos');
-
-        $this->post('/', \EmpleadoApi::class . ':CargarUno');
-
-        $this->put('/', \EmpleadoApi::class . ':ModificarUno');
-
-        $this->delete('/', \EmpleadoApi::class . ':BorrarUno');        
-    })->add(\AutenticacionApi::class . ':ValidarSession');
-
-    // Items ABM
-    $app->group('/items', function () {
-
-        $this->get('/{id}', \ItemApi::class . ':TraerUno');
-
-        $this->get('/', \ItemApi::class . ':TraerTodos');
-
-        $this->post('/', \ItemApi::class . ':CargarUno');
-
-        $this->put('/', \ItemApi::class . ':ModificarUno');
-
-        $this->delete('/', \ItemApi::class . ':BorrarUno');        
-    })->add(\AutenticacionApi::class . ':ValidarSession');
-
-    // Usuarios ABM
+    // Usuario ABM
     $app->group('/usuarios', function () {
 
-        //$this->get('/{id}', \ItemApi::class . ':TraerUno');
+        $this->get('/{id}', \UsuarioApi::class . ':TraerUno');
 
         $this->get('/', \UsuarioApi::class . ':TraerTodos');
 
         $this->post('/', \UsuarioApi::class . ':CargarUno');
 
-        //$this->put('/', \ItemApi::class . ':ModificarUno');
+        $this->put('/', \UsuarioApi::class . ':ModificarUno');
 
-        //$this->delete('/', \ItemApi::class . ':BorrarUno');        
-    });
+        $this->delete('/', \UsuarioApi::class . ':BorrarUno');        
+    })->add(\AutenticacionApi::class . ':ValidarSessionSocio');
+    
 
     $app->run();
 ?>
