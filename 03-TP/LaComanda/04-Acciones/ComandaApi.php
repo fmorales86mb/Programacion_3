@@ -1,22 +1,22 @@
 <?php
-    include_once "./03-DAO/UsuarioDAO.php";
-    require_once './02-Entidades/Usuario.php';
+    include_once "./03-DAO/ComandaDAO.php";
+    require_once './02-Entidades/Comanda.php';
     require_once './05-Interfaces/IAccionesABM.php';
 
-    class UsuarioApi implements IAccionesABM{
+    class ComandaApi implements IAccionesABM{
         
-        // Retorna json del empleado.
+        // Retorna json del elemento.
         public function TraerUno($request, $response, $args) {
             $id = $args["id"];
-            $obj = UsuarioDAO::GetById($id);            
+            $obj = ComandaDAO::GetById($id);            
             
             $JsonResponse = $response->withJson($obj, 200);        
             return $JsonResponse;
         }
 
-        // Retorna array json de todos los empleados.
+        // Retorna array json de todos los elementos.
         public function TraerTodos($request, $response, $args) {
-            $lista = UsuarioDAO::GetAll();
+            $lista = ComandaDAO::GetAll();
             $strRespuesta;                              
   
             if(count($lista)<1){
@@ -36,12 +36,12 @@
         public function CargarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
             
-            $elemento = new Usuario();
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
-            $elemento->rol = isset($data["rol"])?$data["rol"]:null; 
-            $clave = isset($data["clave"])?$data["clave"]:null;    
+            $elemento = new Comanda();
+            $elemento->codigo = isset($data["codigo"])?$data["codigo"]:null;
+            $elemento->mesa = isset($data["mesa"])?$data["mesa"]:null; 
+            $elemento->foto = isset($data["foto"])?$data["foto"]:null; 
                
-            if(UsuarioDAO::Insert($elemento, $clave)){
+            if(ComandaDAO::Insert($elemento)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{
@@ -55,13 +55,13 @@
         public function ModificarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
                         
-            $elemento = new Usuario();   
+            $elemento = new Comanda();
             $elemento->id = isset($data["id"])?$data["id"]:null;
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;         
-            $clave = isset($data["clave"])?$data["clave"]:null;
-            $elemento->rol = isset($data["rol"])?$data["rol"]:null;
+            $elemento->codigo = isset($data["codigo"])?$data["codigo"]:null;
+            $elemento->mesa = isset($data["mesa"])?$data["mesa"]:null; 
+            $elemento->foto = isset($data["foto"])?$data["foto"]:null;  
                 
-            if(UsuarioDAO::Update($elemento, $clave)){
+            if(ComandaDAO::Update($elemento)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{
@@ -76,7 +76,7 @@
             $data = $request->getParsedBody();        
             $id = isset($data["id"])?$data["id"]:null;
             
-            if(UsuarioDAO::Delete($id)){
+            if(ComandaDAO::Delete($id)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{

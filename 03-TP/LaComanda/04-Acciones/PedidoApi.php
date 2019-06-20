@@ -1,22 +1,32 @@
 <?php
-    include_once "./03-DAO/UsuarioDAO.php";
-    require_once './02-Entidades/Usuario.php';
-    require_once './05-Interfaces/IAccionesABM.php';
+    include_once "./03-DAO/PedidoDAO.php";
+    require_once './02-Entidades/Pedido.php';
 
-    class UsuarioApi implements IAccionesABM{
+    class PedidoApi{
         
-        // Retorna json del empleado.
-        public function TraerUno($request, $response, $args) {
-            $id = $args["id"];
-            $obj = UsuarioDAO::GetById($id);            
+        // Retorna json de los elementos.
+        public function TraerPorRolYEstado($request, $response, $args) {
+            $rol = $args["rol"];
+            $estado = $args["estado"];
             
-            $JsonResponse = $response->withJson($obj, 200);        
+            $lista = PedidoDAO::GetPedidosByRolEstado($rol, $estado);            
+            
+            if(count($lista)<1){
+                $strRespuesta = "No existen registros.";
+            }
+            else{
+                for($i=0; $i<count($lista); $i++){
+                    $strRespuesta[] = $lista[$i];
+                }                
+            }
+            
+            $JsonResponse = $response->withJson($strRespuesta, 200);                    
             return $JsonResponse;
         }
 
-        // Retorna array json de todos los empleados.
+        // Retorna array json de todos los elementos.
         public function TraerTodos($request, $response, $args) {
-            $lista = UsuarioDAO::GetAll();
+            $lista = ProductoDAO::GetAll();
             $strRespuesta;                              
   
             if(count($lista)<1){
@@ -36,12 +46,13 @@
         public function CargarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
             
-            $elemento = new Usuario();
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
-            $elemento->rol = isset($data["rol"])?$data["rol"]:null; 
-            $clave = isset($data["clave"])?$data["clave"]:null;    
+            $elemento = new Pedido();
+            $elemento->comanda = isset($data["comanda"])?$data["comanda"]:null;
+            $elemento->producto = isset($data["producto"])?$data["producto"]:null; 
+            $elemento->estado = isset($data["estado"])?$data["estado"]:null; 
+            $elemento->tiempoEstimado = isset($data["tiempo"])?$data["tiempo"]:null; 
                
-            if(UsuarioDAO::Insert($elemento, $clave)){
+            if(PedidoDAO::Insert($elemento)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{
@@ -55,13 +66,13 @@
         public function ModificarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
                         
-            $elemento = new Usuario();   
+            $elemento = new Producto();
             $elemento->id = isset($data["id"])?$data["id"]:null;
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;         
-            $clave = isset($data["clave"])?$data["clave"]:null;
-            $elemento->rol = isset($data["rol"])?$data["rol"]:null;
+            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
+            $elemento->rolEncargado = isset($data["rolEncargado"])?$data["rolEncargado"]:null; 
+            $elemento->precio = isset($data["precio"])?$data["precio"]:null; 
                 
-            if(UsuarioDAO::Update($elemento, $clave)){
+            if(ProductoDAO::Update($elemento)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{
@@ -76,7 +87,7 @@
             $data = $request->getParsedBody();        
             $id = isset($data["id"])?$data["id"]:null;
             
-            if(UsuarioDAO::Delete($id)){
+            if(ProductoDAO::Delete($id)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{

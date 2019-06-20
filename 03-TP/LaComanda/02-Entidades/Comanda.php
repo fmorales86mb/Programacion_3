@@ -3,7 +3,7 @@
         
         public $id;
         public $codigo;
-        public $mesa_id;
+        public $mesa;
         public $foto;                  
         
         public function __construct(){                

@@ -11,7 +11,7 @@
         public static function GetById($id){
             $retorno = null;                       
             
-            $query = "SELECT `id`, `nombre`, `rol` FROM `usuario` WHERE 'id' = :id";            
+            $query = "SELECT `id`, `nombre`, `rol` FROM `usuario` WHERE `id` = :id";            
 
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();               
@@ -35,7 +35,6 @@
             
             $query = "SELECT `id`, `nombre`, `rol` FROM `usuario`";
             
-            var_dump($query);
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();               
                 $sentencia = $db->RetornarConsulta($query); 
@@ -57,21 +56,20 @@
             $query = "INSERT INTO `usuario`(`nombre`, `clave`, `rol`) ";
             $query .="VALUES (:nombre, :clave, :rol)";                         
             
-            if ($tarea_id !== null){
-                try{
-                    $db = AccesoDatos::DameUnObjetoAcceso();                 
-                    $sentencia = $db->RetornarConsulta($query);
-                    $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
-                    $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
-                    $sentencia->bindValue(':rol',  $elemento->rol, PDO::PARAM_INT);                     
-                    
-                    $sentencia->execute(); 
-                    
-                    $retorno = true;                                                                          
-                } catch (PDOException $e) {
-                    $retorno = false;
-                }
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
+                $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
+                $sentencia->bindValue(':rol',  $elemento->rol, PDO::PARAM_INT);                     
+                
+                $sentencia->execute(); 
+                
+                $retorno = true; //retorna true si no inserta también.                                                                          
+            } catch (PDOException $e) {
+                $retorno = false;
             }
+        
 
             return $retorno;
         }
@@ -80,24 +78,22 @@
         public static function Update($elemento, $clave){
             $retorno = false;           
             
-            $query = "UPDATE `usuario` SET `nombre`= :nombre,`clave`= :clave,`rol`=:rol WHERE 'id'= :id";                        
+            $query = "UPDATE `usuario` SET `nombre`= :nombre, `clave`= :clave, `rol`=:rol WHERE `id`= :id";                        
             
-            if ($tarea_id !== null){
-                try{
-                    $db = AccesoDatos::DameUnObjetoAcceso();                 
-                    $sentencia = $db->RetornarConsulta($query); 
-                    $sentencia->bindValue(':id',  $elemento->id, PDO::PARAM_INT);
-                    $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
-                    $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
-                    $sentencia->bindValue(':rol',  $elemento->rol, PDO::PARAM_INT);                  
-                    
-                    $sentencia->execute(); 
-                    
-                    $retorno = true;                                  
-                } catch (PDOException $e) {
-                    $retorno = false;
-                }
-            }
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query); 
+                $sentencia->bindValue(':id',  $elemento->id, PDO::PARAM_INT);
+                $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
+                $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
+                $sentencia->bindValue(':rol',  $elemento->rol, PDO::PARAM_INT);                  
+                
+                $sentencia->execute(); 
+                
+                $retorno = true;                                  
+            } catch (PDOException $e) {
+                $retorno = false;
+            }        
             
             return $retorno;
         }

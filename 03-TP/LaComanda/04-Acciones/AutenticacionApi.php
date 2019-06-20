@@ -58,6 +58,7 @@ class AutenticacionAPI{
         }        
     } 
 
+    // Crea un token asociado al rol del usuario logueado.
     private function CrearToken($nombre, $clave){
         $token = false;
         $ahora = time();

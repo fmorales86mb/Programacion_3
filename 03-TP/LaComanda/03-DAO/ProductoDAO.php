@@ -51,21 +51,19 @@
         public static function Insert($elemento){
             $retorno = false;           
             
-            $query = "INSERT INTO `producto`(`nombre`, `rol_encargado`, `precio`) VALUES (:nombre, :rol, :precio)";            
-            
-            if ($sector_id !== null){
-                try{
-                    $db = AccesoDatos::DameUnObjetoAcceso();                 
-                    $sentencia = $db->RetornarConsulta($query);
-                    $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
-                    $sentencia->bindValue(':rol',  $elemento->rolEncargado, PDO::PARAM_INT); 
-                    $sentencia->bindValue(':precio',  $elemento->precio, PDO::PARAM_INT);                 
-                    
-                    $sentencia->execute();                     
-                    $retorno = true;                                                                          
-                } catch (PDOException $e) {
-                    $retorno = false;
-                }
+            $query = "INSERT INTO `producto`(`nombre`, `rol_encargado`, `precio`) VALUES (:nombre, :rol, :precio)";                        
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
+                $sentencia->bindValue(':rol',  $elemento->rolEncargado, PDO::PARAM_INT); 
+                $sentencia->bindValue(':precio',  $elemento->precio, PDO::PARAM_INT);                 
+                
+                $sentencia->execute();                     
+                $retorno = true;                                                                          
+            } catch (PDOException $e) {
+                $retorno = false;
             }
             
             return $retorno;
@@ -74,23 +72,22 @@
         // Modifica los datos de un elemento en la DB por el id.
         public static function Update($elemento){
             $retorno = null;           
-            $query = "UPDATE `producto` SET `nombre`= :nombre,`rol_encargado`= :rol,`precio`= :precio WHERE id = :id";                    
+            $query = "UPDATE `producto` SET `nombre`= :nombre, `rol_encargado`= :rol, `precio`= :precio WHERE id = :id";                    
             
-            if ($sector_id !== null){
-                try{
-                    $db = AccesoDatos::DameUnObjetoAcceso();                 
-                    $sentencia = $db->RetornarConsulta($query); 
-                    $sentencia->bindValue(':id',  $elemento->id, PDO::PARAM_INT);
-                    $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
-                    $sentencia->bindValue(':rol',  $elemento->rolEncargado, PDO::PARAM_INT); 
-                    $sentencia->bindValue(':precio',  $elemento->precio, PDO::PARAM_INT);   
-                    
-                    $sentencia->execute();                     
-                    $retorno = $sentencia->fetch();                                  
-                } catch (PDOException $e) {
-                    $retorno = -1;
-                }
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query); 
+                $sentencia->bindValue(':id',  $elemento->id, PDO::PARAM_INT);
+                $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
+                $sentencia->bindValue(':rol',  $elemento->rolEncargado, PDO::PARAM_INT); 
+                $sentencia->bindValue(':precio',  $elemento->precio, PDO::PARAM_INT);   
+                
+                $sentencia->execute();                     
+                $retorno = true;                
+            } catch (PDOException $e) {
+                $retorno = -1;
             }
+            
             return $retorno;
         }
 
@@ -104,9 +101,8 @@
                 $sentencia = $db->RetornarConsulta($query);
                 $sentencia->bindValue(':id',  $id, PDO::PARAM_INT);
                 
-                $sentencia->execute(); 
-                
-                $retorno = $sentencia->fetch();                                          
+                $sentencia->execute();             
+                $retorno = true;
             } catch (PDOException $e) {
                 $retorno = -1;
             }
