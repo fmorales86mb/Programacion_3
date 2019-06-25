@@ -1,22 +1,21 @@
 <?php
-    include_once "./03-DAO/UsuarioDAO.php";
-    require_once './02-Entidades/Usuario.php';
+    include_once "./03-DAO/CompraDAO.php";
+    require_once './02-Entidades/Compra.php';
     require_once './05-Interfaces/IAccionesABM.php';
 
-    class UsuarioApi{
+    class CompraApi {
         
         #region Métodos
         // Recibe datos en el body y pasa objeto al DAO para insertarlo. 
         public function CargarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
             
-            $elemento = new Usuario();
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
-            $elemento->clave = isset($data["clave"])?$data["clave"]:null; 
-            $elemento->perfil = isset($data["perfil"])?$data["perfil"]:null; 
-            $elemento->sexo = isset($data["sexo"])?$data["sexo"]:null;                         
+            $elemento = new Compra();
+            $elemento->articulo = isset($data["articulo"])?$data["articulo"]:null;
+            $elemento->precio = isset($data["precio"])?$data["precio"]:null;
+            $elemento->usuarioId = isset($data["usuarioId"])?$data["usuarioId"]:null;
             
-            if(UsuarioDAO::Insert($elemento)){
+            if(CompraDAO::Insert($elemento)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{
@@ -26,11 +25,16 @@
             return $JsonResponse;
         }
 
-        // Retorna array json de todos los elementos.
+        // Retorna array json de todos los elementos por rol.
         public function TraerTodos($request, $response, $args) {
-            $lista = UsuarioDAO::GetAll();
+            $data = $request->getParsedBody();
+            $rol = isset($data["rol"])?$data["rol"]:null;
+            
+            var_dump($request->getUri());
+            
+            $lista = CompraDAO::GetAllByRol($rol);
             $strRespuesta;                              
-    
+  
             if(count($lista)<1){
                 $strRespuesta = "No existen registros.";
             }
@@ -41,34 +45,34 @@
             }
             
             $JsonResponse = $response->withJson($strRespuesta, 200);                    
-            return $JsonResponse; 
-        }
+            //return $JsonResponse; 
+        }        
         #endregion
 
-        #region Sin Uso
+        #region
         /*
-        // Retorna json del empleado.
+        // Retorna json del elemento.
         public function TraerUno($request, $response, $args) {
             $id = $args["id"];
-            $obj = UsuarioDAO::GetById($id);            
+            $obj = ProductoDAO::GetById($id);            
             
             $JsonResponse = $response->withJson($obj, 200);        
             return $JsonResponse;
         }
 
-
+        
 
         // Crea un Elemento y se lo pasa al DAO para que haga el Update.
         public function ModificarUno($request, $response, $args) {
             $data = $request->getParsedBody();        
                         
-            $elemento = new Usuario();   
+            $elemento = new Producto();
             $elemento->id = isset($data["id"])?$data["id"]:null;
-            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;         
-            $clave = isset($data["clave"])?$data["clave"]:null;
-            $elemento->rol = isset($data["rol"])?$data["rol"]:null;
+            $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
+            $elemento->rolEncargado = isset($data["rolEncargado"])?$data["rolEncargado"]:null; 
+            $elemento->precio = isset($data["precio"])?$data["precio"]:null; 
                 
-            if(UsuarioDAO::Update($elemento, $clave)){
+            if(ProductoDAO::Update($elemento)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{
@@ -83,7 +87,7 @@
             $data = $request->getParsedBody();        
             $id = isset($data["id"])?$data["id"]:null;
             
-            if(UsuarioDAO::Delete($id)){
+            if(ProductoDAO::Delete($id)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
             else{

@@ -1,5 +1,6 @@
 <?php
     include_once "./04-Acciones/UsuarioApi.php";
+    include_once "./04-Acciones/CompraApi.php";
     // include_once "./04-Acciones/ProductoApi.php";
     // include_once "./04-Acciones/MesaApi.php";
     // include_once "./04-Acciones/ComandaApi.php";
@@ -20,13 +21,13 @@
     $app = new \Slim\App(['settings' => $config]);    
     
     // Login
-    //$app->post('/login', \AutenticacionApi::class . ':Login');
+    $app->post('/login', \AutenticacionApi::class . ':Login');
 
     // Usuario ABM
     $app->group('/usuario', function () {
         //$this->get('/{id}', \UsuarioApi::class . ':TraerUno');
 
-        //$this->get('/', \UsuarioApi::class . ':TraerTodos');
+        $this->get('/', \UsuarioApi::class . ':TraerTodos')->add(\AutenticacionApi::class . ':ValidarSessionAdmin');
 
         $this->post('/', \UsuarioApi::class . ':CargarUno');
 
@@ -36,6 +37,21 @@
 
     });//->add(\AutenticacionApi::class . ':ValidarSessionSocio');
     
+
+    // Compra ABM
+    $app->group('/compra', function () {
+        //$this->get('/{id}', \ProductoApi::class . ':TraerUno');
+
+        $this->get('/', \CompraApi::class . ':TraerTodos')->add(\AutenticacionApi::class . ':ValidarSessionGetCompra');
+
+        $this->post('/', \CompraApi::class . ':CargarUno');    
+
+        //$this->put('/', \ProductoApi::class . ':ModificarUno');
+
+        //$this->delete('/', \ProductoApi::class . ':BorrarUno'); 
+
+    })->add(\AutenticacionApi::class . ':ValidarSession');
+
     // Producto ABM
     // $app->group('/productos', function () {
     //     $this->get('/{id}', \ProductoApi::class . ':TraerUno');

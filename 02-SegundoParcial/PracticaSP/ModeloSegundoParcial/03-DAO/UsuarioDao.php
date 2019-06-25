@@ -37,7 +37,7 @@
         public static function ConsultarUsuario($elemento){
             $retorno = false;           
             $query = 
-            "SELECT u.nombre, u.perfil, u.sexo, u.clave
+            "SELECT u.id, u.nombre, u.perfil, u.sexo, u.clave
             FROM usuario as u
             WHERE 
                 u.nombre = :nombre AND
@@ -51,10 +51,10 @@
                 $sentencia->bindValue(':nombre',  $elemento->nombre, PDO::PARAM_STR);
                 $sentencia->bindValue(':perfil',  $elemento->perfil, PDO::PARAM_STR);
                 $sentencia->bindValue(':sexo',  $elemento->sexo, PDO::PARAM_STR);
-                $sentencia->bindValue(':clave',  $clave, PDO::PARAM_STR); 
+                $sentencia->bindValue(':clave',  $elemento->clave, PDO::PARAM_STR); 
                 
                 $sentencia->execute();                 
-                $retorno = $sentencia->fetchObject(self::CLASSNAME);                                     
+                $retorno = $sentencia->fetch();                                     
             } catch (PDOException $e) {
                 $retorno = false;                  
             }
@@ -62,6 +62,25 @@
             return $retorno;
         }
 
+        // Traigo todos los Elementos de la DB.
+        public static function GetAll(){
+            $retorno = array();           
+            
+            $query = "SELECT * FROM `usuario`";
+            
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();               
+                $sentencia = $db->RetornarConsulta($query); 
+                
+                $sentencia->execute(); 
+                                
+                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
+            } catch (PDOException $e) {
+                $retorno = -1;                 
+            }
+            
+            return $retorno;
+        }
         #endregion
 
         #region Métodos Sin Usar
@@ -88,25 +107,7 @@
             return $retorno;
         }   
         
-        // Traigo todos los Elementos de la DB.
-        public static function GetAll(){
-            $retorno = array();           
-            
-            $query = "SELECT `id`, `nombre`, `rol` FROM `usuario`";
-            
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();               
-                $sentencia = $db->RetornarConsulta($query); 
                 
-                $sentencia->execute(); 
-                                
-                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
-            } catch (PDOException $e) {
-                $retorno = -1;                 
-            }
-            
-            return $retorno;
-        }        
 
         // Modifica los datos de un elemento en la DB por el id.
         public static function Update($elemento, $clave){

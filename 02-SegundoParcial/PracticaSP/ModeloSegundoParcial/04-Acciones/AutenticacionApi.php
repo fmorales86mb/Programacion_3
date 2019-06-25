@@ -1,7 +1,10 @@
 <?php
 include_once "./03-DAO/UsuarioDAO.php";
+include_once "./03-DAO/LogDAO.php";
 
 use \Firebase\JWT\JWT;
+
+// https://www.php-fig.org/psr/psr-7/
 
 class AutenticacionAPI{    
     private const CLAVE = "claveSecreta";
@@ -16,15 +19,15 @@ class AutenticacionAPI{
         $elemento->perfil = isset($data["perfil"])?$data["perfil"]:null; 
         $elemento->sexo = isset($data["sexo"])?$data["sexo"]:null; 
 
-        if($nombre !== null && $clave !== null){
-            $token = $this->CrearToken($nombre, $clave);
-            $response->write($token);
+        if($elemento !== null){
+            $token = $this->CrearToken($elemento);
+            $JsonResponse = $response->withJson($token, 200);  
         }
         else{
-            $response->write(false);
+            $JsonResponse = $response->withJson(false, 200);
         }
         
-        return $response;
+        return $JsonResponse;
     }
 
     // Valida el Token 
@@ -32,9 +35,14 @@ class AutenticacionAPI{
         $data = getallheaders();        
         $token = isset($data["token"])?$data["token"]:"";
 
-        $rol = $this->ValidarToken($token);
-        
-        if($rol != false){
+        $deco = $this->ValidarToken($token);
+                
+        if($deco != false){ 
+            // Agrego parametro id del usuario logeado. 
+            $parametros = $request->getParsedBody(); 
+            $parametros["usuarioId"] = $deco->UsuarioId; 
+            $request = $request->withParsedBody($parametros); 
+
             $response = $next($request, $response);            
             return $response;            
         }
@@ -44,14 +52,14 @@ class AutenticacionAPI{
         }        
     }   
 
-    // Valida el Token rol 5
-    public function ValidarSessionSocio($request, $response, $next) {        
+    // Valida el Token rol Admin
+    public function ValidarSessionAdmin($request, $response, $next) {
         $data = getallheaders();        
         $token = isset($data["token"])?$data["token"]:"";
 
         $deco = $this->ValidarToken($token);
 
-        if($deco->rol == 5){
+        if($deco->rol == "admin"){
             $response = $next($request, $response);            
             return $response;            
         }
@@ -61,19 +69,68 @@ class AutenticacionAPI{
         }        
     } 
 
+    // Valida el Token rol Admin
+    public function ValidarSessionGetCompra($request, $response, $next) {
+        $data = getallheaders();        
+        $token = isset($data["token"])?$data["token"]:"";
+
+        $deco = $this->ValidarToken($token);
+
+        if($deco != false){ 
+            // Agrego parametro id del usuario logeado. 
+            $parametros = $request->getParsedBody(); 
+            $parametros["rol"] = $deco->rol; 
+            $request = $request->withParsedBody($parametros); 
+
+            $response = $next($request, $response);            
+            return $response;            
+        }
+        else{
+            $response->write("inválido");
+            return $response;
+        }     
+          
+    }   
+    
+    public function ValidarTokenYLog($request, $response, $next) {
+        $data = getallheaders();        
+        $token = isset($data["token"])?$data["token"]:"";
+
+        $deco = $this->ValidarToken($token);
+
+        if($deco != false){ 
+            
+            // Log            
+            $parametros = $request->getParsedBody(); 
+            $parametros["usuario"] = $deco->UsuarioId;
+            $parametros["metodo"] = $request->getMethod();
+            $parametros["ruta"] = $deco->getRequestTarget();            
+            
+            $request = $request->withParsedBody($parametros); 
+            $response = $next($request, $response);            
+            return $response;            
+        }
+        else{
+            $response->write("inválido");
+            return $response;
+        }     
+          
+    }   
+
     // Crea un token asociado al rol del usuario logueado.
     private function CrearToken($elemento){
         $token = false;
         $ahora = time();
         
-        $rol = UsuarioDAO::ConsultarUsuario($nombre, $clave);
-
-        if ($rol != null){        
+        $usuario = UsuarioDAO::ConsultarUsuario($elemento);
+        
+        if ($usuario != null){        
             $payload = array(
                 'iat' => $ahora,
                 //'exp' => $ahora + (300),
                 'app' => "API FM",
-                'rol' => $rol[0]
+                'rol' => $usuario["perfil"],
+                'UsuarioId' => $usuario["id"]
             );
     
             $token = JWT::encode($payload, self::CLAVE);
