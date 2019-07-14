@@ -8,7 +8,8 @@ use \Firebase\JWT\JWT;
 class AutenticacionAPI{    
     private const CLAVE = "claveSecreta";
 
-    // Evalua la existencia de la tupla nombre-clave y retorna token o false.
+    #region Métodos Públicos
+    // Evalua la existencia de la tupla legajo-clave y retorna token o false.
     public function Login($request, $response, $next) {
         $data = $request->getParsedBody(); 
         
@@ -25,29 +26,7 @@ class AutenticacionAPI{
         }
         
         return $JsonResponse;
-    }
-
-    // Valida el Token 
-    public function ValidarSession($request, $response, $next) {        
-        $data = getallheaders();        
-        $token = isset($data["token"])?$data["token"]:"";
-
-        $deco = $this->ValidarToken($token);
-                
-        if($deco != false){ 
-            // Agrego parametro id del usuario logeado. 
-            $parametros = $request->getParsedBody(); 
-            $parametros["usuarioId"] = $deco->UsuarioId; 
-            $request = $request->withParsedBody($parametros); 
-
-            $response = $next($request, $response);            
-            return $response;            
-        }
-        else{
-            $response->write("inválido");
-            return $response;
-        }        
-    }   
+    }       
 
     // Valida el Token rol Admin
     public function ValidarSessionAdmin($request, $response, $next) {
@@ -65,7 +44,6 @@ class AutenticacionAPI{
             return $response;
         }        
     } 
-
     
     // Valida el Token y pasa el tipo
     public function ValidarSessionPorTipo($request, $response, $next) {
@@ -76,9 +54,9 @@ class AutenticacionAPI{
 
         if($deco != false){ 
             // Agrego parametro id del usuario logeado. 
-            $parametros = $request->getParsedBody();             
+            $parametros = $request->getParsedBody();                     
             $parametros["tipo"] = $deco->rol;
-            $parametros["legajo"] = $deco->UsuarioId;             
+            $parametros["legajo"] = $deco->UsuarioId;                         
             $request = $request->withParsedBody($parametros); 
 
             $response = $next($request, $response);            
@@ -87,8 +65,7 @@ class AutenticacionAPI{
         else{
             $response->write("inválido");
             return $response;
-        }     
-          
+        }               
     }  
 
     // Valida el Token y pasa el tipo
@@ -163,6 +140,30 @@ class AutenticacionAPI{
           
     }   
 
+    // Valida el Token 
+    public function ValidarSession($request, $response, $next) {        
+        $data = getallheaders();        
+        $token = isset($data["token"])?$data["token"]:"";
+
+        $deco = $this->ValidarToken($token);
+                
+        if($deco != false){ 
+            // Agrego parametro id del usuario logeado. 
+            $parametros = $request->getParsedBody(); 
+            $parametros["usuarioId"] = $deco->UsuarioId; 
+            $request = $request->withParsedBody($parametros); 
+
+            $response = $next($request, $response);            
+            return $response;            
+        }
+        else{
+            $response->write("inválido");
+            return $response;
+        }        
+    }
+    #endregion
+
+    #region Métodos Privados
     // Crea un token asociado al rol del usuario logueado.
     private function CrearToken($elemento){
         $token = "no existe el usuario";
@@ -175,8 +176,8 @@ class AutenticacionAPI{
                 'iat' => $ahora,
                 //'exp' => $ahora + (300),
                 'app' => "API FM",
-                'rol' => $usuario["tipo"],
-                'UsuarioId' => $usuario["legajo"]
+                'rol' => $usuario->tipo,
+                'UsuarioId' => $usuario->legajo
             );
     
             $token = JWT::encode($payload, self::CLAVE);

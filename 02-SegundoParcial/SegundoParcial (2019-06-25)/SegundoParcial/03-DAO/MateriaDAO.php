@@ -7,8 +7,7 @@
         
         // Guarda un elemento. Retorna el id guardado. (retorna false ahora).
         public static function Insert($elemento){
-            $retorno = false;           
-            
+            $retorno = true;                       
             $query = "INSERT INTO `materia`(`nombre`, `cuatrimestre`, `cupos`) VALUES (:nombre, :cuatrimestre, :cupos)";                        
 
             try{
@@ -18,8 +17,7 @@
                 $sentencia->bindValue(':cuatrimestre',  $elemento->cuatrimestre, PDO::PARAM_INT); 
                 $sentencia->bindValue(':cupos',  $elemento->cupos, PDO::PARAM_INT);                 
                 
-                $sentencia->execute();                     
-                $retorno = true;                                                                          
+                $sentencia->execute();                                                                                                           
             } catch (PDOException $e) {
                 $retorno = false;
             }
@@ -27,24 +25,24 @@
             return $retorno;
         }
 
+        // Inscribe al alumno a la materia y modifica el cupo de la misma.
         public static function Inscribir($materia, $legajo){
-            $retorno = false;           
-            
+            $retorno = false;                       
             $cupos = MateriaDAO::GetCupos($materia);
-            
-            if($cupos["cupos"] > 0){
-                $cupoNuevo = $cupos["cupos"] -1;
+                        
+            if($cupos > 0){
+                $retorno = true;
+                $cupoNuevo = $cupos - 1;
                 
-                $query = "UPDATE `materia` SET `cupos`= :cupo WHERE id= :materia";
+                $query = "UPDATE `materia` SET `cupos`= :cupo WHERE nombre= :materia";
 
                 try{
                     $db = AccesoDatos::DameUnObjetoAcceso();                 
                     $sentencia = $db->RetornarConsulta($query);
-                    $sentencia->bindValue(':materia',  $materia, PDO::PARAM_INT);
+                    $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR);
                     $sentencia->bindValue(':cupo',  $cupoNuevo, PDO::PARAM_INT);                                   
                     
-                    $sentencia->execute();                     
-                    $retorno = true;                                                                          
+                    $sentencia->execute();                                                                                                                 
                 } catch (PDOException $e) {
                     $retorno = false;
                 }
@@ -57,22 +55,20 @@
         
         //obtiene los cupos
         private static function GetCupos($materia){
-            $retorno = false;           
-            
+            $retorno = false;                       
             $query = 
                 "SELECT m.cupos 
                 FROM materia as m 
                 WHERE 
-                    m.id = :materia";                                
+                    m.nombre = :materia";                                
 
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();                 
                 $sentencia = $db->RetornarConsulta($query);   
-                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_INT); 
-                    
-                
+                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR); 
+                                    
                 $sentencia->execute();                     
-                $retorno = $sentencia->fetch(0);                                                                       
+                $retorno = $sentencia->fetchColumn();                                                                       
             } catch (PDOException $e) {
                 $retorno = false;
             }
@@ -80,19 +76,18 @@
             return $retorno;
         }
 
+        // Agrega un alumno a una matería en la db.
         private static function AddAlumnoToMateria($materia, $legajo){
-            $retorno = false;           
-            
+            $retorno = true;                       
             $query = "INSERT INTO `materia_alumno`(`materia`, `alumno`) VALUES (:materia,:legajo)";
 
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();                 
                 $sentencia = $db->RetornarConsulta($query);   
-                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_INT);
+                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR);
                 $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                     
                 
-                $sentencia->execute();                     
-                $retorno = true;                                                                       
+                $sentencia->execute();                                                                                                      
             } catch (PDOException $e) {
                 $retorno = false;
             }
@@ -101,23 +96,39 @@
         }
 
         public static function AsociarMateriaProfesor($materia, $legajo){
-            $retorno = false;                                               
-                
-            var_dump($materia, $legajo);
-            $query = "INSERT INTO `materia_profesor`(`id_materia`, `id_profesor`) VALUES (:materia, :legajo)";
+            $retorno = true;                                                                           
+            $query = "INSERT INTO `materia_profesor`(`materia`, `profesor`) VALUES (:materia, :legajo)";
 
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();                 
                 $sentencia = $db->RetornarConsulta($query);
-                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_INT);
+                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR);
                 $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                                   
                 
-                $sentencia->execute();                     
-                $retorno = true;                                                                          
+                $sentencia->execute();                                                                                                            
             } catch (PDOException $e) {
                 $retorno = false;
             }            
                         
+            return $retorno;
+        }
+
+        // Trae la lista de todas las materias.
+        public static function GetAll(){
+            $retorno = array();           
+            
+            $query = "SELECT * FROM `materia`"; 
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();               
+                $sentencia = $db->RetornarConsulta($query); 
+                
+                $sentencia->execute();                                 
+                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
+            } catch (PDOException $e) {
+                $retorno = null;                 
+            }
+            
             return $retorno;
         }
 
@@ -144,24 +155,7 @@
         }   
         
         // Traigo todos los Elementos de la DB.
-        public static function GetAll(){
-            $retorno = array();           
-            
-            $query = "SELECT id, nombre, rol_encargado as rolEncargado, precio FROM `producto`"; 
-
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();               
-                $sentencia = $db->RetornarConsulta($query); 
-                
-                $sentencia->execute(); 
-                                
-                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
-            } catch (PDOException $e) {
-                $retorno = -1;                 
-            }
-            
-            return $retorno;
-        }
+        
 
         
 

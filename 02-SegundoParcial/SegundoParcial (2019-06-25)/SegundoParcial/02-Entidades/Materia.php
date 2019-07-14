@@ -1,10 +1,9 @@
 <?php   
-    class Producto{
-        
-        public $id;
+    class Materia{
+                
         public $nombre;
-        public $rolEncargado;
-        public $precio;                  
+        public $cuatrimestre; 
+        public $cupos;              
         
         public function __construct(){                
         }                         

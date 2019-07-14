@@ -5,7 +5,8 @@
         public $clave;
         public $tipo;
         public $legajo;   
-        public $email;              
+        public $email; 
+        public $urlFoto;             
 
         public function __construct(){                
         }                         

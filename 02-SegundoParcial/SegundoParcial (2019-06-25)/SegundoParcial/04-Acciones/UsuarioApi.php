@@ -31,54 +31,63 @@
 
         // Recibe datos en el body y pasa objeto al DAO para insertarlo. 
         public function CargarDatosPorLegajo($request, $response, $args) {
-            $data = $request->getParsedBody();                            
-            //$file = $request->getUploadedFiles();                       
-            $elemento = new Usuario();
-            $elemento->tipo = isset($data["tipo"])?$data["tipo"]:null;
-            $elemento->email = isset($args["email"])?$args["email"]:null;
-            $elemento->legajo = isset($args["legajo"])?$args["legajo"]:null;  
-            //$file = isset($data["foto"])?$data["foto"]:null;                         
+            $JsonResponse = $response->withJson(false, 400);
+            $data = $request->getParsedBody(); 
 
-            switch($elemento->tipo){
+            $rol = isset($data["tipo"])?$data["tipo"]:null;
+            
+            $elemento = UsuarioDAO::GetById(isset($args["legajo"])? $args["legajo"]:0);
+            $elemento->email = isset($data["email"])?$data["email"]:null;                                                
+            
+            $imagen = isset($_FILES["foto"]) ? $_FILES["foto"] : null;
+            $materias = isset($data["materias"])?json_decode($data["materias"]):null;
+
+            switch($rol){
                 case "admin":
-                    UsuarioDAO::InsertAlumno($elemento);
-                    $materia = isset($data["materia"])?$data["materia"]:null;
-                    MateriaDAO::AsociarMateriaProfesor($materia, $elemento->legajo);
+                    switch($elemento->tipo){
+                        case "alumno":
+                            if(UsuarioDAO::UpdateAlumno($elemento, $imagen)){
+                                $JsonResponse = $response->withJson(true, 200);
+                            }
+                        break;
+
+                        case "profesor":                                        
+                            for($i = 0; $i<count($materias); $i++){     
+                                $nombreMateria = $materias[$i]->nombre;
+                                MateriaDAO::AsociarMateriaProfesor($nombreMateria, $elemento->legajo);                                     
+                            }   
+                            if(UsuarioDAO::UpdateProfesor($elemento)){
+                                $JsonResponse = $response->withJson(true, 200);
+                            }              
+                        break;
+
+                        default:
+                        break;
+                    }                                        
                 break;
 
                 case "alumno":
-                    //$file = isset($data["foto"])?$data["foto"]:null;
-                    UsuarioDAO::InsertAlumno($elemento);                    
-                    break;
+                    if(UsuarioDAO::UpdateAlumno($elemento, $imagen)){
+                        $JsonResponse = $response->withJson(true, 200);
+                    }
+                break;
 
-                case "profesor":
-                    // for($i = 0; $i<count($data); $i++){
-                    //     if($data["materia"]){
-                    //         $materia = isset($data["materia"])?$data["materia"]:null;
-                    //         MateriaDAO::AsociarMateriaProfesor($materia, $elemento->legajo);
-                    //     }                    
-                    // }
-                    $materia = isset($data["materia"])?$data["materia"]:null;
-                    MateriaDAO::AsociarMateriaProfesor($materia, $elemento->legajo);
-                    
-                    break;
+                case "profesor":                                        
+                    for($i = 0; $i<count($materias); $i++){     
+                        $nombreMateria = $materias[$i]->nombre;
+                        MateriaDAO::AsociarMateriaProfesor($nombreMateria, $elemento->legajo);                                     
+                    }   
+                    if(UsuarioDAO::UpdateProfesor($elemento)){
+                        $JsonResponse = $response->withJson(true, 200);
+                    }              
+                break;
 
                 default:
                 break;
             }                       
-        
-            if(UsuarioDAO::Insert($elemento)){
-                $JsonResponse = $response->withJson(true, 200);     
-            }
-            else{
-                $JsonResponse = $response->withJson(false, 400);                    
-            }
             
             return $JsonResponse;
         }
-
-        
-
         #endregion
 
         #region Sin Uso

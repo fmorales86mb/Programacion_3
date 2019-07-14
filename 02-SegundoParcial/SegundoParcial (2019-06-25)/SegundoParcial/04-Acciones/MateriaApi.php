@@ -25,12 +25,12 @@
 
         // Recibe datos en el body y pasa objeto al DAO para insertarlo. 
         public function Inscribir($request, $response, $args) {
+            $JsonResponse = $response->withJson(false, 400);
             $data = $request->getParsedBody();        
                         
             $materia = isset($args["id"])?$args["id"]:null;
             $legajo = isset($data["legajo"])?$data["legajo"]:null;
-            
-            //var_dump($materia, $legajo);
+                        
             if(MateriaDAO::Inscribir($materia, $legajo)){
                 $JsonResponse = $response->withJson(true, 200);     
             }
@@ -42,19 +42,32 @@
         }
 
         public function GetMaterias($request, $response, $args) {
-            $lista = ProductoDAO::GetAll();
-            $strRespuesta;                              
-  
-            if(count($lista)<1){
-                $strRespuesta = "No existen registros.";
+            $JsonResponse = $response->withJson(false, 400);
+            $data = $request->getParsedBody();
+            $rol = isset($data["tipo"])?$data["tipo"]:null;
+
+            var_dump($rol);
+            switch($rol){
+                case "admin":
+                    $lista = MateriaDAO::GetAll();
+                    if($lista!=null && count($lista)>0){
+                        for($i=0; $i<count($lista); $i++){
+                            $strRespuesta[] = $lista[$i];
+                        }
+                        $JsonResponse = $response->withJson($strRespuesta, 200);     
+                    }
+                break;
+
+                case "alumno":
+                break;
+
+                case "profesor":
+                break;
+
+                default:
+                break;
             }
-            else{
-                for($i=0; $i<count($lista); $i++){
-                    $strRespuesta[] = $lista[$i];
-                }                
-            }
-            
-            $JsonResponse = $response->withJson($strRespuesta, 200);                    
+                  
             return $JsonResponse; 
         }
 
