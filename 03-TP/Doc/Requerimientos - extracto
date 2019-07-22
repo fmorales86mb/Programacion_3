@@ -1,0 +1,63 @@
+Yo como administrador del sistema, necesito ver:
+(Necesito ver o de una fecha en particular o en un lapso de tiempo.)
+
+7-De los empleados:
+a- Los días y horarios que se Ingresaron al sistema.
+b- Cantidad de operaciones de todos por sector.
+c- Cantidad de operaciones de todos por sector listada por cada empleado.
+d- Cantidad de operaciones de cada uno por separado.
+e- Posibilidad de dar de alta a nuevos, suspenderlos o borrarlos.
+
+8-De las pedidos:
+a- lo que más se vendió .
+b- lo que menos se vendió .
+c- los que no se entregaron en el tiempo estipulado.
+d- los cancelados.
+9- De las mesas :
+a- La más usada.
+b- La menos usada.
+c- La que más facturó.
+d- La que menos facturó.
+e- la/s que tuvo la factura con el mayor importe.
+f- la/s que tuvo la factura con el menor importe.
+g- Lo que facturó entre dos fechas una mesa .
+h- Mejores comentarios.
+i- Peores comentarios.
+
+# Las mesas tiene un código de identificación único de 5 caracteres , el cliente al entrar en nuestra
+aplicación puede ingresar ese código junto con el del pedido y se le mostrará el tiempo restante
+para su pedido.
+
+# La mesa se puede estar con estos estados “con cliente esperando pedido” ,”con clientes
+comiendo” “con clientes pagando” y “cerrada” cierra cuando el cliente se retira y la acción de
+cambiar el estado a “cerrada” la realiza únicamente uno de los socios. Los estados anteriores son
+cambiados por el mozo.
+
+#Al terminar de comer se habilita una encuesta con una puntuación del 1 al 10 para:
+La mesa .
+El restaurante.
+El mozo.
+El cocinero.
+y un breve texto de 66 caracteres hablando de la experiencia buena o mala que tuvo en su
+atención.
+
+
+// listo
+#Con la opción de
+tomar una foto de la mesa con sus integrantes y relacionarlo con el pedido.
+
+#al mozo se le da un código único alfanumérico de 5 caracteres al cliente que le permite
+identificar su pedido.
+
+# El empleado que tomar ese pedido para prepararlo, al momento de hacerlo debe cambiar el
+estado de ese pedido como “en preparación” y agregarle un tiempo estimado de preparación.
+teniendo en cuenta que puede haber más de un empleado en el mismo puesto .ej: dos bartender
+o tres cocineros.
+
+# El empleado que tomar ese pedido para prepararlo debe poner el estado “listo para servir”,
+cuando el pedido está listo.
+
+# Cualquiera de los socios pude ver en todo momento el estado de todos los pedidos.
+
+# Si al mozo le hacen un pedido de un vino , una cerveza y unas empanadas, deberían los
+empleados correspondientes ver estos pedidos en su listado de “pendientes”. 

@@ -3,52 +3,39 @@ include_once "./03-DAO/UsuarioDAO.php";
 
 use \Firebase\JWT\JWT;
 
+// https://www.php-fig.org/psr/psr-7/
+
 class AutenticacionAPI{    
     private const CLAVE = "claveSecreta";
 
-    // Evalua la existencia de la tupla nombre-clave y retorna token o false.
+    #region Métodos Públicos
+    // Evalua la existencia de la tupla id-clave y retorna token o false.
     public function Login($request, $response, $next) {
         $data = $request->getParsedBody(); 
         
-        $nombre = isset($data["nombre"])?$data["nombre"]:null;
-        $clave = isset($data["clave"])?$data["clave"]:null;
+        $elemento = new Usuario();
+        $elemento->nombre = isset($data["nombre"])?$data["nombre"]:null;
+        $elemento->clave = isset($data["clave"])?$data["clave"]:null;     
 
-        if($nombre !== null && $clave !== null){
-            $token = $this->CrearToken($nombre, $clave);
-            $response->write($token);
+        if($elemento->nombre != null && $elemento->clave != null){
+            $token = $this->CrearToken($elemento);
+            $JsonResponse = $response->withJson($token, 200);  
         }
         else{
-            $response->write(false);
+            $JsonResponse = $response->withJson("error", 200);
         }
         
-        return $response;
-    }
+        return $JsonResponse;
+    }       
 
-    // Valida el Token 
-    public function ValidarSession($request, $response, $next) {        
-        $data = getallheaders();        
-        $token = isset($data["token"])?$data["token"]:"";
-
-        $rol = $this->ValidarToken($token);
-        
-        if($rol != false){
-            $response = $next($request, $response);            
-            return $response;            
-        }
-        else{
-            $response->write("inválido");
-            return $response;
-        }        
-    }   
-
-    // Valida el Token rol 5
-    public function ValidarSessionSocio($request, $response, $next) {        
+    // Valida el Token rol Socio
+    public function ValidarSessionSocio($request, $response, $next) {
         $data = getallheaders();        
         $token = isset($data["token"])?$data["token"]:"";
 
         $deco = $this->ValidarToken($token);
 
-        if($deco->rol == 5){
+        if($deco->rol == "socio"){
             $response = $next($request, $response);            
             return $response;            
         }
@@ -58,19 +45,65 @@ class AutenticacionAPI{
         }        
     } 
 
+    // Valida el Token rol Mozo
+    public function ValidarSessionMozo($request, $response, $next) {
+        $data = getallheaders();        
+        $token = isset($data["token"])?$data["token"]:"";
+
+        $deco = $this->ValidarToken($token);
+
+        if($deco->rol == "mozo"){
+            $response = $next($request, $response);            
+            return $response;            
+        }
+        else{
+            $response->write("inválido");
+            return $response;
+        }        
+    }
+    
+    // Valida el Token y pasa el tipo
+    public function ValidarSessionPorTipo($request, $response, $next) {
+        $data = getallheaders();        
+        $token = isset($data["token"])?$data["token"]:"";
+
+        $deco = $this->ValidarToken($token);
+
+        if($deco != false){ 
+            // Agrego parametro id del usuario logeado. 
+            $parametros = $request->getParsedBody();                                 
+            $parametros["rol"] = $deco->rol;
+            $parametros["id"] = $deco->UsuarioId;
+            $parametros["sector"] = $deco->UsuarioSector;                         
+            $request = $request->withParsedBody($parametros); 
+
+            $response = $next($request, $response);            
+            return $response;            
+        }
+        else{
+            $response->write("inválido");
+            return $response;
+        }               
+    }  
+    #endregion
+
+    #region Métodos Privados
     // Crea un token asociado al rol del usuario logueado.
-    private function CrearToken($nombre, $clave){
-        $token = false;
+    private function CrearToken($elemento){
+        $token = "no existe el usuario";
         $ahora = time();
         
-        $rol = UsuarioDAO::ConsultarUsuario($nombre, $clave);
-
-        if ($rol != null){        
+        $usuario = UsuarioDAO::ConsultarUsuario($elemento);
+        
+        if ($usuario != null && $usuario->estado){        
             $payload = array(
                 'iat' => $ahora,
                 //'exp' => $ahora + (300),
                 'app' => "API FM",
-                'rol' => $rol[0]
+                'rol' => $usuario->rol,
+                'UsuarioId' => $usuario->id,
+                'UsuarioNombre' => $usuario->nombre,
+                'UsuarioSector' => $usuario->sector,
             );
     
             $token = JWT::encode($payload, self::CLAVE);
@@ -108,5 +141,6 @@ class AutenticacionAPI{
         
         return $valido;
     }
+    #endregion
 }
 ?>

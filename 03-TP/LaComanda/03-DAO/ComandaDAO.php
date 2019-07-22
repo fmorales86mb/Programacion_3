@@ -1,67 +1,24 @@
 <?php
-    include_once "./02-Entidades/Identificadores.php";
     include_once "./02-Entidades/Comanda.php";
-    include_once "./03-DAO/AccesoDatos.php"; 
-    include_once './05-Interfaces/IDaoABM.php';   
+    include_once "./03-DAO/AccesoDatos.php";   
+    include_once "./01-Fwk/imagenes.php";     
 
-    class ComandaDAO implements IDaoABM{   
+    class ComandaDAO {   
         const CLASSNAME = 'Comanda';
         
-        // Traigo Elemento por id.
-        public static function GetById($id){
-            $retorno = null;           
-            
-            $query = "SELECT id, codigo, mesa_id as mesa, foto FROM `comanda` WHERE id= :id";
-            
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();               
-                $sentencia = $db->RetornarConsulta($query); 
-                $sentencia->bindValue(':id',  $id, PDO::PARAM_INT); 
-                
-                $sentencia->execute();                 
-                $retorno = $sentencia->fetchObject(self::CLASSNAME);                                                                                      
-            } catch (PDOException $e) {
-                $retorno = -1;                  
-            }
-            
-            return $retorno;
-        }   
-        
-        // Traigo todos los Elementos de la DB.
-        public static function GetAll(){
-            $retorno = array();           
-            
-            $query = "SELECT id, codigo, mesa_id as mesa, foto FROM `comanda`"; 
-
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();               
-                $sentencia = $db->RetornarConsulta($query); 
-                
-                $sentencia->execute(); 
-                                
-                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
-            } catch (PDOException $e) {
-                $retorno = -1;                 
-            }
-            
-            return $retorno;
-        }
-
         // Guarda un elemento. Retorna el id guardado. (retorna false ahora).
         public static function Insert($elemento){
-            $retorno = false;           
-            
-            $query = "INSERT INTO `comanda`(`codigo`, `mesa_id`, `foto`) VALUES (:codigo, :mesa, :foto)";                        
+            $retorno = true;                       
+            $query = "INSERT INTO `comanda`(`codigo`, `codigo_mesa`,`tiempo_estimado`) VALUES (:codigo, :mesa, :tiempo)";
 
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();                 
                 $sentencia = $db->RetornarConsulta($query);
                 $sentencia->bindValue(':codigo',  $elemento->codigo, PDO::PARAM_STR);
-                $sentencia->bindValue(':mesa',  $elemento->mesa, PDO::PARAM_INT); 
-                $sentencia->bindValue(':foto',  $elemento->foto, PDO::PARAM_STR);                 
+                $sentencia->bindValue(':mesa',  $elemento->mesa, PDO::PARAM_STR); 
+                $sentencia->bindValue(':tiempo',  $elemento->tiempo_estimado, PDO::PARAM_STR);                 
                 
-                $sentencia->execute();                     
-                $retorno = true;                                                                          
+                $sentencia->execute();                                                                                                           
             } catch (PDOException $e) {
                 $retorno = false;
             }
@@ -69,45 +26,217 @@
             return $retorno;
         }
 
-        // Modifica los datos de un elemento en la DB por el id.
-        public static function Update($elemento){
-            $retorno = null;           
-            $query = "UPDATE `comanda` SET `codigo`=:codigo, `mesa_id`=:mesa, `foto`=:foto WHERE id = :id";                    
-            
+        // Actualiza el estado de la comanda.
+        public static function UpdateEstado($estado, $comanda){
+            $retorno = true;                
+            $query = "UPDATE comanda SET comanda.estado = :estado WHERE comanda.codigo = :codigo";
+
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();                 
-                $sentencia = $db->RetornarConsulta($query); 
-                $sentencia->bindValue(':id',  $elemento->id, PDO::PARAM_INT);
-                $sentencia->bindValue(':codigo',  $elemento->codigo, PDO::PARAM_STR);
-                $sentencia->bindValue(':mesa',  $elemento->mesa, PDO::PARAM_INT); 
-                $sentencia->bindValue(':foto',  $elemento->foto, PDO::PARAM_STR);   
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':estado',  $estado, PDO::PARAM_STR);
+                $sentencia->bindValue(':codigo',  $comanda, PDO::PARAM_STR);                                   
                 
-                $sentencia->execute();                     
-                $retorno = true;                
+                $sentencia->execute();                                                                                                                 
             } catch (PDOException $e) {
-                $retorno = -1;
+                $retorno = false;
+            }            
+                                    
+            return $retorno;
+        }
+
+        // Trae la lista de todas las materias.
+        public static function GetAll(){
+            $retorno = array();           
+            
+            $query = "SELECT comanda.estado, comanda.codigo FROM comanda"; 
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();               
+                $sentencia = $db->RetornarConsulta($query); 
+                
+                $sentencia->execute();                                 
+                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
+            } catch (PDOException $e) {
+                $retorno = null;                 
+            }
+            
+            return $retorno;
+        }
+        
+        public static function UpdateFotoComanda($imagen, $comanda){
+            $retorno = true;                
+            $query = "UPDATE comanda SET comanda.foto = :foto WHERE comanda.codigo = :codigo";
+
+            // guardo imagen
+            $imageUrl = Imagenes::GuardarImagen(
+                $imagen, 
+                "./05-Img/foto-$comanda");      
+            
+            $foto = $imageUrl;  
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':foto',  $foto, PDO::PARAM_STR);
+                $sentencia->bindValue(':codigo',  $comanda, PDO::PARAM_STR);                                   
+                
+                $sentencia->execute();                                                                                                                 
+            } catch (PDOException $e) {
+                $retorno = false;
+            }            
+                                    
+            return $retorno;
+        }
+
+        // Trae la lista de todas las materias.
+        public static function GetPendientes($sector){
+            $retorno = array(); 
+            $estado = "en preparacion";
+
+            $query = 
+            "SELECT pe.id, p.nombre, p.sector, m.codigo
+            FROM comanda as c, producto as p, pedido as pe, mesa as m 
+            WHERE 
+                c.estado = :estado AND
+                c.codigo = pe.codigo_comanda AND
+                m.codigo = c.codigo_mesa AND
+                p.id = pe.producto_id AND
+                p.sector = :sector"; 
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();               
+                $sentencia = $db->RetornarConsulta($query); 
+                $sentencia->bindValue(':estado',  $estado, PDO::PARAM_STR);
+                $sentencia->bindValue(':sector',  $sector, PDO::PARAM_STR);
+
+                $sentencia->execute();                                 
+                $retorno = $sentencia->fetchAll(PDO::FETCH_ASSOC);                                                                                      
+            } catch (PDOException $e) {
+                $retorno = null;                 
             }
             
             return $retorno;
         }
 
-        // Borra el registro de un elemento en DB por el id.
-        public static function Delete($id){
-            $retorno = null;           
-            $query = "DELETE FROM `comanda` WHERE id = :id";
-            
-            try {
-                $db = AccesoDatos::DameUnObjetoAcceso(); 
-                $sentencia = $db->RetornarConsulta($query);
-                $sentencia->bindValue(':id',  $id, PDO::PARAM_INT);
-                
-                $sentencia->execute();             
-                $retorno = true;
+
+
+
+
+
+
+
+        //obtiene los cupos
+        private static function GetCupos($materia){
+            $retorno = false;                       
+            $query = 
+                "SELECT m.cupos 
+                FROM materia as m 
+                WHERE 
+                    m.nombre = :materia";                                
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query);   
+                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR); 
+                                    
+                $sentencia->execute();                     
+                $retorno = $sentencia->fetchColumn();                                                                       
             } catch (PDOException $e) {
-                $retorno = -1;
+                $retorno = false;
             }
             
             return $retorno;
         }
+
+        // Agrega un alumno a una matería en la db.
+        private static function AddAlumnoToMateria($materia, $legajo){
+            $retorno = true;                       
+            $query = "INSERT INTO `materia_alumno`(`materia`, `alumno`) VALUES (:materia,:legajo)";
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query);   
+                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR);
+                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                     
+                
+                $sentencia->execute();                                                                                                      
+            } catch (PDOException $e) {
+                $retorno = false;
+            }
+            
+            return $retorno;
+        }
+
+        public static function AsociarMateriaProfesor($materia, $legajo){
+            $retorno = true;                                                                           
+            $query = "INSERT INTO `materia_profesor`(`materia`, `profesor`) VALUES (:materia, :legajo)";
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR);
+                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                                   
+                
+                $sentencia->execute();                                                                                                            
+            } catch (PDOException $e) {
+                $retorno = false;
+            }            
+                        
+            return $retorno;
+        }
+
+        
+
+        // Trae la lista de todas las materias.
+        public static function GetMateriasAlumno($legajo){
+            $retorno = array();           
+            
+            $query = 
+            "SELECT m.nombre, m.cuatrimestre, m.cupos
+             FROM materia_alumno as ma, materia as m
+             WHERE 
+                ma.alumno = :legajo AND
+                m.nombre = ma.materia"; 
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();               
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                                    
+                
+                $sentencia->execute();                                 
+                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
+            } catch (PDOException $e) {
+                $retorno = null;                 
+            }
+            
+            return $retorno;
+        }
+
+        // Trae la lista de todas las materias.
+        public static function GetMateriasProfesor($legajo){
+            $retorno = array();           
+            
+            $query = 
+            "SELECT m.nombre, m.cuatrimestre, m.cupos
+             FROM materia_profesor as mp, materia as m
+             WHERE 
+                mp.profesor = :legajo AND
+                m.nombre = mp.materia"; 
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();               
+                $sentencia = $db->RetornarConsulta($query); 
+                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);
+                
+                $sentencia->execute();                                 
+                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
+            } catch (PDOException $e) {
+                $retorno = null;                 
+            }
+            
+            return $retorno;
+        }
+
     }
 ?>
