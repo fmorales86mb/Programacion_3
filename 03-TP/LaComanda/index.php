@@ -1,6 +1,7 @@
 <?php
     include_once "./04-Acciones/UsuarioApi.php";
     include_once "./04-Acciones/ComandaApi.php";
+    include_once "./04-Acciones/EncuestaApi.php";
     include_once "./04-Acciones/AutenticacionApi.php";
 
     use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -23,13 +24,16 @@
         $this->post('/', \ComandaApi::class . ':CargarComanda')-> add(\AutenticacionApi::class . ':ValidarSessionMozo');
         $this->put('/', \ComandaApi::class . ':UpdateEstadoComanda')-> add(\AutenticacionApi::class . ':ValidarSessionPorTipo');
         $this->get('/', \ComandaApi::class . ':GetComandas')-> add(\AutenticacionApi::class . ':ValidarSessionSocio');
+        $this->get('/{mesa}/{comanda}', \ComandaApi::class . ':ObtenerTiempoRestante');
     });
     
     $app->post('/foto', \ComandaApi::class . ':UpdateFotoComanda')-> add(\AutenticacionApi::class . ':ValidarSessionMozo');
 
-    $app->get('/pendientes', \ComandaApi::class . ':PedidosPendientes')-> add(\AutenticacionApi::class . ':ValidarSessionPorTipo');  
+    $app->get('/pendientes', \ComandaApi::class . ':PedidosPendientes')-> add(\AutenticacionApi::class . ':ValidarSessionPorTipo');
     
-    $app->get('/tiempoRestante', \ComandaApi::class . ':ObtenerTiempoRestante');
+    $app->put('/mesa', \ComandaApi::class . ':UpdateEstadoMesa')-> add(\AutenticacionApi::class . ':ValidarSessionPorTipo');  
+
+    $app->post('/encuesta', \EncuestaApi::class . ':Encuesta');  
 
     $app->run();
 ?>

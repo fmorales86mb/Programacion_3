@@ -48,8 +48,9 @@
         // Trae la lista de todas las materias.
         public static function GetAll(){
             $retorno = array();           
-            
-            $query = "SELECT comanda.estado, comanda.codigo FROM comanda"; 
+                        
+            $query = "SELECT c.id, c.foto, c.estado, c.codigo, c.codigo_mesa as mesa, c.tiempo_inicio, c.tiempo_estimado, c.tiempo_fin 
+            FROM comanda as c"; 
 
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();               
@@ -119,124 +120,57 @@
             return $retorno;
         }
 
-
-
-
-
-
-
-
-        //obtiene los cupos
-        private static function GetCupos($materia){
-            $retorno = false;                       
-            $query = 
-                "SELECT m.cupos 
-                FROM materia as m 
-                WHERE 
-                    m.nombre = :materia";                                
-
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();                 
-                $sentencia = $db->RetornarConsulta($query);   
-                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR); 
-                                    
-                $sentencia->execute();                     
-                $retorno = $sentencia->fetchColumn();                                                                       
-            } catch (PDOException $e) {
-                $retorno = false;
-            }
-            
-            return $retorno;
-        }
-
-        // Agrega un alumno a una matería en la db.
-        private static function AddAlumnoToMateria($materia, $legajo){
-            $retorno = true;                       
-            $query = "INSERT INTO `materia_alumno`(`materia`, `alumno`) VALUES (:materia,:legajo)";
-
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();                 
-                $sentencia = $db->RetornarConsulta($query);   
-                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR);
-                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                     
-                
-                $sentencia->execute();                                                                                                      
-            } catch (PDOException $e) {
-                $retorno = false;
-            }
-            
-            return $retorno;
-        }
-
-        public static function AsociarMateriaProfesor($materia, $legajo){
-            $retorno = true;                                                                           
-            $query = "INSERT INTO `materia_profesor`(`materia`, `profesor`) VALUES (:materia, :legajo)";
-
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();                 
-                $sentencia = $db->RetornarConsulta($query);
-                $sentencia->bindValue(':materia',  $materia, PDO::PARAM_STR);
-                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                                   
-                
-                $sentencia->execute();                                                                                                            
-            } catch (PDOException $e) {
-                $retorno = false;
-            }            
+        // Trae la lista de todas las materias.
+        public static function GetComanda($codigoComanda, $codigoMesa){
+            $retorno = false;           
                         
-            return $retorno;
-        }
-
-        
-
-        // Trae la lista de todas las materias.
-        public static function GetMateriasAlumno($legajo){
-            $retorno = array();           
-            
             $query = 
-            "SELECT m.nombre, m.cuatrimestre, m.cupos
-             FROM materia_alumno as ma, materia as m
-             WHERE 
-                ma.alumno = :legajo AND
-                m.nombre = ma.materia"; 
-
-            try{
-                $db = AccesoDatos::DameUnObjetoAcceso();               
-                $sentencia = $db->RetornarConsulta($query);
-                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);                                    
-                
-                $sentencia->execute();                                 
-                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
-            } catch (PDOException $e) {
-                $retorno = null;                 
-            }
-            
-            return $retorno;
-        }
-
-        // Trae la lista de todas las materias.
-        public static function GetMateriasProfesor($legajo){
-            $retorno = array();           
-            
-            $query = 
-            "SELECT m.nombre, m.cuatrimestre, m.cupos
-             FROM materia_profesor as mp, materia as m
-             WHERE 
-                mp.profesor = :legajo AND
-                m.nombre = mp.materia"; 
+            "SELECT c.id, c.foto, c.estado, c.codigo, c.codigo_mesa as mesa, c.tiempo_inicio, c.tiempo_estimado, c.tiempo_fin 
+            FROM comanda as c
+            WHERE 
+                c.codigo_mesa = :mesa AND
+                c.codigo = :comanda"; 
 
             try{
                 $db = AccesoDatos::DameUnObjetoAcceso();               
                 $sentencia = $db->RetornarConsulta($query); 
-                $sentencia->bindValue(':legajo',  $legajo, PDO::PARAM_INT);
+                $sentencia->bindValue(':mesa',  $codigoMesa, PDO::PARAM_STR);
+                $sentencia->bindValue(':comanda',  $codigoComanda, PDO::PARAM_STR);
                 
                 $sentencia->execute();                                 
-                $retorno = $sentencia->fetchAll(PDO::FETCH_CLASS, self::CLASSNAME);                                                                                      
+                $retorno = $sentencia->fetchObject(self::CLASSNAME);                                                                                      
             } catch (PDOException $e) {
                 $retorno = null;                 
             }
             
             return $retorno;
         }
+
+        // Actualiza el estado de la mesa.
+        public static function UpdateEstadoMesa($estado, $mesa){
+            $retorno = true;                
+            $query = "UPDATE mesa SET mesa.estado = :estado WHERE mesa.codigo = :codigo";
+
+            try{
+                $db = AccesoDatos::DameUnObjetoAcceso();                 
+                $sentencia = $db->RetornarConsulta($query);
+                $sentencia->bindValue(':estado',  $estado, PDO::PARAM_STR);
+                $sentencia->bindValue(':codigo',  $mesa, PDO::PARAM_STR);                                   
+                
+                $sentencia->execute();                                                                                                                 
+            } catch (PDOException $e) {
+                $retorno = false;
+            }            
+                                    
+            return $retorno;
+        }
+
+
+
+
+
+
+        
 
     }
 ?>

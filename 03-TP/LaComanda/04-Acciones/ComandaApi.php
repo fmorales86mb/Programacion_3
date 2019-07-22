@@ -116,71 +116,60 @@
 
         public function ObtenerTiempoRestante($request, $response, $args) {
             $JsonResponse = $response->withJson(false, 400);
-            $data = $request->getParsedBody();
             
-            $comanda = isset($data["comanda"])?$data["comanda"]:null;
-            $mesa = isset($data["mesa"])?$data["mesa"]:null;
-
-            $tiempos = this.ObtenerDatosTiempo($comanda, $mesa);
-            // falta esto
-            $lista = ComandaDAO::GetAll();
-            if($lista!=null && count($lista)>0){
-                for($i=0; $i<count($lista); $i++){
-                    $strRespuesta[] = $lista[$i];
-                }
-                $JsonResponse = $response->withJson($strRespuesta, 200);     
+            $codigoMesa = isset($args["mesa"])?$args["mesa"]: null;
+            $codigoComanda = isset($args["comanda"])?$args["comanda"]: null;
+            
+            $comanda = false;
+            if($codigoMesa != null && $codigoComanda!= null){
+                $comanda = ComandaDAO::GetComanda($codigoComanda, $codigoMesa);                
             }
-                  
+            
+            if($comanda != false){  
+                $ahora = new DateTime('NOW', new DateTimeZone('America/Argentina/Buenos_Aires'));
+                $estimado = explode(":", $comanda->tiempo_estimado);
+                $inicio = new DateTime($comanda->tiempo_inicio, new DateTimeZone('America/Argentina/Buenos_Aires'));
+                $fin = $inicio;
+                $fin->add(new DateInterval("PT$estimado[0]H$estimado[1]M$estimado[2]S"));
+                
+                $diff = $ahora->diff($fin); 
+                $time[] = $diff->h;
+                $time[] = $diff->i;
+                $time[] = $diff->s;
+                
+                $diff = date("$time[0]:$time[1]:$time[2]");                
+                $JsonResponse = $response->withJson($diff, 200);                     
+            }
+
             return $JsonResponse; 
         }
 
-        private function ObtenerDatosTiempo($comanda, $mesa){
-
-        }
-        /*
-        public function GetMaterias($request, $response, $args) {
+        public function UpdateEstadoMesa($request, $response, $args) {
             $JsonResponse = $response->withJson(false, 400);
-            $data = $request->getParsedBody();
-            $rol = isset($data["tipo"])?$data["tipo"]:null;
-            $legajo = isset($data["legajo"])?$data["legajo"]:null;
-            
+            $data = $request->getParsedBody();        
+                        
+            $estado = isset($data["estado"])?$data["estado"]:null;
+            $mesa = isset($data["mesa"])?$data["mesa"]:null;
+            $rol = isset($data["rol"])?$data["rol"]:null;
+                        
             switch($rol){
-                case "admin":
-                    $lista = MateriaDAO::GetAll();
-                    if($lista!=null && count($lista)>0){
-                        for($i=0; $i<count($lista); $i++){
-                            $strRespuesta[] = $lista[$i];
-                        }
-                        $JsonResponse = $response->withJson($strRespuesta, 200);     
-                    }
+                case "socio":
+                if(ComandaDAO::UpdateEstadoMesa("cerrada", $mesa)){
+                    $JsonResponse = $response->withJson(true, 200);
+                }
                 break;
 
-                case "alumno":
-                    $lista = MateriaDAO::GetMateriasAlumno($legajo);
-                        if($lista!=null && count($lista)>0){
-                        for($i=0; $i<count($lista); $i++){
-                            $strRespuesta[] = $lista[$i];
-                        }
-                        $JsonResponse = $response->withJson($strRespuesta, 200);     
-                    }
-                break;
-
-                case "profesor":
-                    $lista = MateriaDAO::GetMateriasProfesor($legajo);
-                        if($lista!=null && count($lista)>0){
-                        for($i=0; $i<count($lista); $i++){
-                            $strRespuesta[] = $lista[$i];
-                        }
-                        $JsonResponse = $response->withJson($strRespuesta, 200);     
-                    }
+                case "mozo":
+                if(ComandaDAO::UpdateEstadoMesa($estado, $mesa)){
+                    $JsonResponse = $response->withJson(true, 200);
+                }
                 break;
 
                 default:
                 break;
             }
-                  
-            return $JsonResponse; 
-        }
-        */
+            
+            return $JsonResponse;
+        }        
     }
 ?>

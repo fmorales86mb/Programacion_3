@@ -1,4 +1,4 @@
-Yo como administrador del sistema, necesito ver:
+﻿Yo como administrador del sistema, necesito ver:
 (Necesito ver o de una fecha en particular o en un lapso de tiempo.)
 
 7-De los empleados:
@@ -23,15 +23,12 @@ f- la/s que tuvo la factura con el menor importe.
 g- Lo que facturó entre dos fechas una mesa .
 h- Mejores comentarios.
 i- Peores comentarios.
+	
 
-# Las mesas tiene un código de identificación único de 5 caracteres , el cliente al entrar en nuestra
-aplicación puede ingresar ese código junto con el del pedido y se le mostrará el tiempo restante
-para su pedido.
 
-# La mesa se puede estar con estos estados “con cliente esperando pedido” ,”con clientes
-comiendo” “con clientes pagando” y “cerrada” cierra cuando el cliente se retira y la acción de
-cambiar el estado a “cerrada” la realiza únicamente uno de los socios. Los estados anteriores son
-cambiados por el mozo.
+
+// listo
+
 
 #Al terminar de comer se habilita una encuesta con una puntuación del 1 al 10 para:
 La mesa .
@@ -41,8 +38,14 @@ El cocinero.
 y un breve texto de 66 caracteres hablando de la experiencia buena o mala que tuvo en su
 atención.
 
+# La mesa se puede estar con estos estados “con cliente esperando pedido” ,”con clientes
+comiendo” “con clientes pagando” y “cerrada” cierra cuando el cliente se retira y la acción de
+cambiar el estado a “cerrada” la realiza únicamente uno de los socios. Los estados anteriores son
+cambiados por el mozo.
 
-// listo
+# Las mesas tiene un código de identificación único de 5 caracteres , el cliente al entrar en nuestra
+aplicación puede ingresar ese código junto con el del pedido y se le mostrará el tiempo restante
+para su pedido.
 #Con la opción de
 tomar una foto de la mesa con sus integrantes y relacionarlo con el pedido.
 
