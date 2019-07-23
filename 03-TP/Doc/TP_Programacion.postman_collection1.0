@@ -1,0 +1,489 @@
+{
+	"id": "9419c8b0-afc0-43ec-be74-c25c7bf6d374",
+	"name": "TP_Programacion",
+	"description": "",
+	"auth": null,
+	"events": null,
+	"variables": [],
+	"order": [
+		"b861aed6-9c29-4304-9da1-6a96d9630e78",
+		"41ceee0d-65b6-4bfe-84b4-1d61b8b9d5c9",
+		"06bef72d-7851-46a6-92a2-199e5e763b8e",
+		"64f9599d-99d1-449f-8a46-b12103fb398c",
+		"75c5eb2f-dd92-45ee-bca0-f9138faf1d3b",
+		"88ef173f-e2cc-4648-b8dc-e60649ff3958",
+		"9275e0cb-1f9d-4b31-94d8-1be899265510",
+		"7bcd54b1-ea4c-4b39-aebb-9bc537885543",
+		"a24f03ce-66d2-463f-94b4-2236f8ca0764",
+		"91d8e041-430e-4fde-bf83-a62d7498eab8",
+		"b1f36323-58a8-4f54-bd2f-ad4ad1a0c4e8"
+	],
+	"folders_order": [],
+	"folders": [],
+	"requests": [
+		{
+			"id": "06bef72d-7851-46a6-92a2-199e5e763b8e",
+			"name": "Login",
+			"url": "{{dominio}}{{api}}login",
+			"description": "",
+			"data": [
+				{
+					"key": "nombre",
+					"value": "Federico",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "clave",
+					"value": "admin",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": null,
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"pathVariables": {}
+		},
+		{
+			"id": "41ceee0d-65b6-4bfe-84b4-1d61b8b9d5c9",
+			"name": "Usuario",
+			"url": "{{dominio}}{{api}}usuario/",
+			"description": "",
+			"data": [
+				{
+					"key": "nombre",
+					"value": "Juan",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "rol",
+					"value": "mozo",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "clave",
+					"value": "passJuan",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "sector",
+					"value": "mesas",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenAdmin}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "token: {{tokenAdmin}}\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "64f9599d-99d1-449f-8a46-b12103fb398c",
+			"name": "Cambiar Estado Comanda",
+			"url": "{{dominio}}{{api}}comanda/",
+			"description": "",
+			"data": [
+				{
+					"key": "estado",
+					"value": "listo para servir",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "comanda",
+					"value": "{{codigoComanda}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenMozo}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "token",
+					"value": "{{tokenAdmin}}",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				},
+				{
+					"key": "Content-Type",
+					"name": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": "",
+					"type": "text"
+				}
+			],
+			"method": "PUT",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "token: {{tokenMozo}}\n//token: {{tokenAdmin}}\nContent-Type: application/x-www-form-urlencoded\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "75c5eb2f-dd92-45ee-bca0-f9138faf1d3b",
+			"name": "Estados Comandas",
+			"url": "{{dominio}}{{api}}comanda/",
+			"description": "",
+			"data": null,
+			"dataMode": null,
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenAdmin}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "token: {{tokenAdmin}}\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "7bcd54b1-ea4c-4b39-aebb-9bc537885543",
+			"name": "Tiempo Restante ",
+			"url": "{{dominio}}{{api}}comanda/ME01/{{codigoComanda}}",
+			"description": null,
+			"data": null,
+			"dataMode": null,
+			"headerData": [],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "88ef173f-e2cc-4648-b8dc-e60649ff3958",
+			"name": "Foto",
+			"url": "{{dominio}}{{api}}foto",
+			"description": "",
+			"data": [
+				{
+					"key": "foto",
+					"value": "/C:/Users/Fede/Pictures/prueba.png",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				},
+				{
+					"key": "comanda",
+					"value": "{{codigoComanda}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenMozo}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "token: {{tokenMozo}}\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "91d8e041-430e-4fde-bf83-a62d7498eab8",
+			"name": "Encuesta",
+			"url": "{{dominio}}{{api}}encuesta",
+			"description": null,
+			"data": [
+				{
+					"key": "codigo_mesa",
+					"value": "ME01",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "calif_mesa",
+					"value": "2",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "calif_restaurante",
+					"value": "1",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "calif_mozo",
+					"value": "3",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "calif_cocinero",
+					"value": "4",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "experiencia",
+					"value": "todo okaa!",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"headerData": [],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "",
+			"pathVariables": {}
+		},
+		{
+			"id": "9275e0cb-1f9d-4b31-94d8-1be899265510",
+			"name": "Pendientes",
+			"url": "{{dominio}}{{api}}pendientes",
+			"description": "",
+			"data": null,
+			"dataMode": null,
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenCocinero}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "token: {{tokenCocinero}}\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "a24f03ce-66d2-463f-94b4-2236f8ca0764",
+			"name": "Estados Mesas",
+			"url": "{{dominio}}{{api}}mesa",
+			"description": null,
+			"data": [
+				{
+					"key": "estado",
+					"value": "con cliente esperando pedido",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "estado",
+					"value": "con clientes comiendo",
+					"description": null,
+					"type": "text",
+					"enabled": false
+				},
+				{
+					"key": "estado",
+					"value": "con clientes pagando",
+					"description": null,
+					"type": "text",
+					"enabled": false
+				},
+				{
+					"key": "mesa",
+					"value": "ME01",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenAdmin}}",
+					"description": null,
+					"type": "text",
+					"enabled": false
+				},
+				{
+					"key": "token",
+					"value": "{{tokenMozo}}",
+					"description": null,
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"name": "Content-Type",
+					"value": "application/x-www-form-urlencoded",
+					"description": null,
+					"type": "text"
+				}
+			],
+			"method": "PUT",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "//token: {{tokenAdmin}}\ntoken: {{tokenMozo}}\nContent-Type: application/x-www-form-urlencoded\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "b1f36323-58a8-4f54-bd2f-ad4ad1a0c4e8",
+			"name": "Reporte Empleados",
+			"url": "{{dominio}}{{api}}usuario/b/cocina",
+			"description": "",
+			"data": [
+				{
+					"key": "sector",
+					"value": "cocina",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				}
+			],
+			"dataMode": "params",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenAdmin}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "GET",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"headers": "token: {{tokenAdmin}}\n",
+			"pathVariables": {}
+		},
+		{
+			"id": "b861aed6-9c29-4304-9da1-6a96d9630e78",
+			"name": "Comanda",
+			"url": "{{dominio}}{{api}}comanda/",
+			"description": "",
+			"data": [
+				{
+					"key": "mesa",
+					"value": "ME01",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "tiempo_estimado",
+					"value": "00:15:00",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "productos",
+					"value": "[{\"id\":1},{\"id\":2}]",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "",
+					"value": "",
+					"description": "",
+					"type": "text",
+					"enabled": false
+				}
+			],
+			"dataMode": "params",
+			"headerData": [
+				{
+					"key": "token",
+					"value": "{{tokenMozo}}",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"method": "POST",
+			"pathVariableData": [],
+			"queryParams": [],
+			"auth": null,
+			"events": null,
+			"folder": null,
+			"headers": "token: {{tokenMozo}}\n",
+			"pathVariables": {}
+		}
+	]
+}

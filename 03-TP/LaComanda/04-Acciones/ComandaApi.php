@@ -113,6 +113,7 @@
             
             return $JsonResponse;
         }
+        
 
         public function ObtenerTiempoRestante($request, $response, $args) {
             $JsonResponse = $response->withJson(false, 400);

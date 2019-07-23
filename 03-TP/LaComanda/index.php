@@ -4,6 +4,9 @@
     include_once "./04-Acciones/EncuestaApi.php";
     include_once "./04-Acciones/AutenticacionApi.php";
 
+    header("Access-Control-Allow-Origin: *");
+    header("Content-Type: application/json; charset=UTF-8");
+
     use \Psr\Http\Message\ServerRequestInterface as Request;
     use \Psr\Http\Message\ResponseInterface as Response;
 
@@ -17,8 +20,10 @@
     $app->post('/login', \AutenticacionApi::class . ':Login');
     
     $app->group('/usuario', function () {        
-        $this->post('/', \UsuarioApi::class . ':CargarUno')-> add(\AutenticacionApi::class . ':ValidarSessionSocio');                   
-    });
+        $this->post('/', \UsuarioApi::class . ':CargarUno');
+        $this->get('/{consulta}[/]', \UsuarioApi::class . ':ReportesEmpleado');
+        $this->get('/{consulta}/{sector}', \UsuarioApi::class . ':ReportesEmpleado');
+    })-> add(\AutenticacionApi::class . ':ValidarSessionSocio');
 
     $app->group('/comanda', function () {        
         $this->post('/', \ComandaApi::class . ':CargarComanda')-> add(\AutenticacionApi::class . ':ValidarSessionMozo');

@@ -1,0 +1,427 @@
+{
+	"info": {
+		"_postman_id": "9419c8b0-afc0-43ec-be74-c25c7bf6d374",
+		"name": "TP_Programacion",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Comanda",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenMozo}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "mesa",
+							"value": "ME01",
+							"type": "text"
+						},
+						{
+							"key": "tiempo_estimado",
+							"value": "00:15:00",
+							"type": "text"
+						},
+						{
+							"key": "productos",
+							"value": "[{\"id\":1},{\"id\":2}]",
+							"type": "text"
+						},
+						{
+							"key": "",
+							"value": "",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}comanda/",
+					"host": [
+						"{{dominio}}{{api}}comanda"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Usuario",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenAdmin}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nombre",
+							"value": "Juan",
+							"type": "text"
+						},
+						{
+							"key": "rol",
+							"value": "mozo",
+							"type": "text"
+						},
+						{
+							"key": "clave",
+							"value": "passJuan",
+							"type": "text"
+						},
+						{
+							"key": "sector",
+							"value": "mesas",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}usuario/",
+					"host": [
+						"{{dominio}}{{api}}usuario"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "nombre",
+							"value": "Federico",
+							"type": "text"
+						},
+						{
+							"key": "clave",
+							"value": "admin",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}login",
+					"host": [
+						"{{dominio}}{{api}}login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cambiar Estado Comanda",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenMozo}}",
+						"type": "text"
+					},
+					{
+						"key": "token",
+						"value": "{{tokenAdmin}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "estado",
+							"value": "listo para servir",
+							"type": "text"
+						},
+						{
+							"key": "comanda",
+							"value": "{{codigoComanda}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}comanda/",
+					"host": [
+						"{{dominio}}{{api}}comanda"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Estados Comandas",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenAdmin}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{dominio}}{{api}}comanda/",
+					"host": [
+						"{{dominio}}{{api}}comanda"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Foto",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenMozo}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "foto",
+							"type": "file",
+							"src": "/C:/Users/Fede/Pictures/prueba.png"
+						},
+						{
+							"key": "comanda",
+							"value": "{{codigoComanda}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}foto",
+					"host": [
+						"{{dominio}}{{api}}foto"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pendientes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenCocinero}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{dominio}}{{api}}pendientes",
+					"host": [
+						"{{dominio}}{{api}}pendientes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tiempo Restante ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{dominio}}{{api}}comanda/ME01/{{codigoComanda}}",
+					"host": [
+						"{{dominio}}{{api}}comanda"
+					],
+					"path": [
+						"ME01",
+						"{{codigoComanda}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Estados Mesas",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenAdmin}}",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "token",
+						"value": "{{tokenMozo}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "estado",
+							"value": "con cliente esperando pedido",
+							"type": "text"
+						},
+						{
+							"key": "estado",
+							"value": "con clientes comiendo",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "estado",
+							"value": "con clientes pagando",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "mesa",
+							"value": "ME01",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}mesa",
+					"host": [
+						"{{dominio}}{{api}}mesa"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Encuesta",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "codigo_mesa",
+							"value": "ME01",
+							"type": "text"
+						},
+						{
+							"key": "calif_mesa",
+							"value": "2",
+							"type": "text"
+						},
+						{
+							"key": "calif_restaurante",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "calif_mozo",
+							"value": "3",
+							"type": "text"
+						},
+						{
+							"key": "calif_cocinero",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "experiencia",
+							"value": "todo okaa!",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}encuesta",
+					"host": [
+						"{{dominio}}{{api}}encuesta"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Reporte Empleados",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "{{tokenAdmin}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "sector",
+							"value": "cocina",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{dominio}}{{api}}usuario/b/cocina",
+					"host": [
+						"{{dominio}}{{api}}usuario"
+					],
+					"path": [
+						"b",
+						"cocina"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

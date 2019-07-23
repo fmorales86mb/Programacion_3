@@ -86,27 +86,40 @@
         }
 
         // Trae lista de alumno por matería.
-        public function GetAlumnosByMateria($request, $response, $args){
-            $JsonResponse = $response->withJson(false, 400);
-                        
-            $materia = isset($args["materia"])?$args["materia"]:null;
+        public function ReportesEmpleado($request, $response, $args){
+            $JsonResponse = $response->withJson(false, 400);            
+              
+            $sector = isset($args["sector"])?$args["sector"]:null;
+            $consulta = isset($args["consulta"])?$args["consulta"]:null;
             
-            if($materia != null){
-                
-                $lista  = UsuarioDao::GetAlumnosByMateria($materia);
+            switch($consulta){
+                case "a":
+                    $lista  = UsuarioDao::GetLogs();
 
-                if(count($lista)<1){
-                    $strRespuesta = "No existen registros.";
-                }
-                else{
-                    for($i=0; $i<count($lista); $i++){
-                        $strRespuesta[] = $lista[$i];
+                    if(count($lista)<1){
+                        $strRespuesta = "No existen registros.";
+                    }
+                    else{
+                        for($i=0; $i<count($lista); $i++){
+                            $strRespuesta[] = $lista[$i];
+                        }
                     }                
-                }
+                    
+                    $JsonResponse = $response->withJson($strRespuesta, 200);
+                break;
+                    
+                case "b":
+                var_dump($sector);
+                    if($sector != null){
+                        $strRespuesta = PedidoDAO::GetCantidadOperacionesPorSector($sector);
+                        $JsonResponse = $response->withJson($strRespuesta, 200);
+                    }
+                break;
 
-                $JsonResponse = $response->withJson($strRespuesta, 200);
+                default:
+                break;
             }
-           
+                    
             return $JsonResponse;
         }
         #endregion

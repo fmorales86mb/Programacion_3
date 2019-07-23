@@ -91,23 +91,26 @@ class AutenticacionAPI{
     #region Métodos Privados
     // Crea un token asociado al rol del usuario logueado.
     private function CrearToken($elemento){
+        date_default_timezone_set('America/Argentina/Buenos_Aires');
         $token = "no existe el usuario";
-        $ahora = time();
+        $ahora=date("YmdHis"); 
         
         $usuario = UsuarioDAO::ConsultarUsuario($elemento);
         
-        if ($usuario != null && $usuario->estado){        
-            $payload = array(
-                'iat' => $ahora,
-                //'exp' => $ahora + (300),
-                'app' => "API FM",
-                'rol' => $usuario->rol,
-                'UsuarioId' => $usuario->id,
-                'UsuarioNombre' => $usuario->nombre,
-                'UsuarioSector' => $usuario->sector,
-            );
-    
-            $token = JWT::encode($payload, self::CLAVE);
+        if ($usuario != null && $usuario->estado){ 
+            if(UsuarioDAO::InsertLog($usuario->id, $ahora)){
+                $payload = array(
+                    'iat' => $ahora,
+                    //'exp' => $ahora + (300),
+                    'app' => "API FM",
+                    'rol' => $usuario->rol,
+                    'UsuarioId' => $usuario->id,
+                    'UsuarioNombre' => $usuario->nombre,
+                    'UsuarioSector' => $usuario->sector,
+                );
+        
+                $token = JWT::encode($payload, self::CLAVE);
+            }                   
         }
         
         return $token;

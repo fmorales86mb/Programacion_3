@@ -2,8 +2,8 @@
 (Necesito ver o de una fecha en particular o en un lapso de tiempo.)
 
 7-De los empleados:
-a- Los días y horarios que se Ingresaron al sistema.
-b- Cantidad de operaciones de todos por sector.
+	a- Los días y horarios que se Ingresaron al sistema.
+	b- Cantidad de operaciones de todos por sector.
 c- Cantidad de operaciones de todos por sector listada por cada empleado.
 d- Cantidad de operaciones de cada uno por separado.
 e- Posibilidad de dar de alta a nuevos, suspenderlos o borrarlos.
@@ -13,6 +13,7 @@ a- lo que más se vendió .
 b- lo que menos se vendió .
 c- los que no se entregaron en el tiempo estipulado.
 d- los cancelados.
+
 9- De las mesas :
 a- La más usada.
 b- La menos usada.
@@ -29,6 +30,7 @@ i- Peores comentarios.
 
 // listo
 
+#logs
 
 #Al terminar de comer se habilita una encuesta con una puntuación del 1 al 10 para:
 La mesa .
